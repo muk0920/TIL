@@ -58,7 +58,7 @@ $ tree
 > db.isMaster(); 
 ```
 
-![image-20191230093446336](C:\Users\HPE\AppData\Roaming\Typora\typora-user-images\image-20191230093446336.png)
+![image-20191230200120034](images/image-20191230200120034.png)
 
 위의 사진에서 2가지를 확인하라. `ismaster` 가 `true` 일 경우 `primary` 인 경우, 만약 `primary` 가 아닐 경우 `ismaster` 는 `false` 라고 나올것이다. 
 
@@ -76,7 +76,7 @@ $ tree
 > db.isMaster(); 
 ```
 
-![image-20191230093855624](C:\Users\HPE\AppData\Roaming\Typora\typora-user-images\image-20191230093855624.png)
+![image-20191230200130657](images/image-20191230200130657.png)
 
 
 
@@ -132,7 +132,7 @@ books
 
 Slave 에서 command 를 실행할 수 있는 옵션이  false 이기 때문에 db 에 접근하기 위해서는 해당 옵션을 `true` 로 바꿔주어야한다. 
 
-![image-20191230094901652](C:\Users\HPE\AppData\Roaming\Typora\typora-user-images\image-20191230094901652.png)
+![image-20191230200142416](images/image-20191230200142416.png)
 
 ``` json
 > rs.slaveOk(); 

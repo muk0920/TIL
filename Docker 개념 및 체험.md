@@ -33,7 +33,7 @@
 
   - 유니온 파일 시스템을 이용 -> 여러 개의 Layer 를 하나의 파일 시스템으로 사용 가능. 
 
-  ![image-20191230151734237](C:\Users\HPE\AppData\Roaming\Typora\typora-user-images\image-20191230151734237.png)
+  ![image-20191230200047018](images/image-20191230200047018.png)
 
 
 
@@ -43,7 +43,7 @@
 
 - 실체화 -> Container 
 
-  ![image-20191230151911933](C:\Users\HPE\AppData\Roaming\Typora\typora-user-images\image-20191230151911933.png)
+  ![image-20191230200036099](images/image-20191230200036099.png)
 
 
 

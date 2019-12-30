@@ -4,7 +4,7 @@
 > vagrant status 
 ```
 
-![image-20191230103033823](C:\Users\HPE\AppData\Roaming\Typora\typora-user-images\image-20191230103033823.png)
+![image-20191230200201282](images/image-20191230200201282.png)
 
 ``` bash
 > vagrant up 
