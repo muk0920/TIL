@@ -1,3 +1,5 @@
+**Docker-Compose** : 한번에 여러개의 container 를 통합 관리 할 수 있게 하는 툴. 
+
 ```bash 
 $ docker-compose version 
 
@@ -21,9 +23,9 @@ OpenSSL version: OpenSSL 1.0.2q  20 Nov 2018
 
 `-e` : 컨테이너 내에서 사용할 환경변수 설정 
 
-`-name`: 
+`-name`: 컨테이너에 이름을 설정하는 옵션.  
 
-`-rm ` : 
+`-rm ` : 컨테이너 안의 프로세스가 종료되면 컨테이너를 자동으로 삭제하는 옵션.
 
 `-it` : -i 와 -t 를 동시에 사용. 
 
