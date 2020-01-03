@@ -1,6 +1,13 @@
 ## Docker Swarm 
 
+#### 도커 스웜
 
+도커 컨테이너를 위한 클러스터링, 스케쥴링 툴로서, 스웜을 이용하면 여러 개의 서버와 컨테이너 관리를 쉽게 할 수 있다. 
+
+- Swarm 에서 사용할 포트 
+  - TCP port 2377  : cluster management 통신에 사용 
+  - TCP/UDP port 7946 : node 간의 통신에 사용 
+  - TCP/UDP port 4789 : overlay network 트래픽에 사용 
 
 Docker Swarm --> 오케스트레이션 
 
@@ -107,4 +114,90 @@ manager : Worker 들이 가지고 있는 내용들을 관리해주는 작업을 
 
 
 
+
+
+
+
+
+#### 설치 없이 가상의 환경에서 도커를 사용하여 SWARM 실습
+
+play-with-docker.com ( 도커의 설치 없이 웹에서 가상으로 사용하는 툴 )
+
+![image-20200103091943844](images/image-20200103091943844.png)
+
+
+
+**node1)**  
+
+```bash
+$ docker swarm init 
+
+Error response from daemon: could not choose an IP address to advertise since this system has multiple addresses on different interfaces (192.168.0.33 on eth0 and 172.18.0.97 on eth1) - specify one with --advertise-addr
+```
+
+```bash
+$ docker swarm init --advertise-addr eth0 
+
+Swarm initialized: current node (uvbsk83e5h43nhl2wbw8tqggm) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-3hae0gaoy7ke2koqtc7pak8jd3upjhsla5qj11dw60jl6dvtro-6gdvcxmwkxrvjw626ccjb8i4s 192.168.0.33:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+```
+
+
+
+**node2 / node3 ) Manager 에 Worker 등록하기 **
+
+```bash
+$ docker swarm join --token SWMTKN-1-3hae0gaoy7ke2koqtc7pak8jd3upjhsla5qj11dw60jl6dvtro-6gdvcxmwkxrvjw626ccjb8i4s 192.168.0.33:2377
+
+This node joined a swarm as a worker.
+```
+
+
+
+#### Local 의 레지스트리 서버에 이미지를 등록하는 방법
+
+
+
+```bash
+$ docker image push [push_대상_레지스트리_호스트/]리포지토리명[:태그명]
+
+ex )$ docker image push localhost:5000/example/echo:latest
+```
+
+push하는 대상의 default 는 도커 허브이고, 로컬의 레지스트리 서버에 등록하기 위해서는 호스트PC와 포워딩 된 레지스트리 포트의 주소를 넣어 줘야한다.  
+
+
+
+- 도커 레지스트리용 이미지 생성 
+
+```bash
+$ docker tag example/echo:latest localhost:5000/example/echo:latest
+```
+
+- 도커 레지스트리에 이미지 등록 
+
+```bash
+$ docker push localhost:5000/example/echo:latest
+```
+
+이미지 등록이 되었는지는 웹 브라우저에서 `localhost:5000/v2/_catalog` 를 접속하면 확인할 수 있다. 
+
+![image-20200103100238043](images/image-20200103100238043.png)
+
+- 도커 레지스트리로부터 이미지 다운 ( 각각의 Worker에서 작업 )
+
+셸에서 실행하거나 cmd 창에서 worker 에 접속하며 명령어를 바로 실행하는 방법 2가지가 있다. 
+
+```sh
+ # sh 셸
+ docker pull registry:5000/example/echo
+ 
+ # cmd 
+ $ docker exec -it worker03 docker pull registry:5000/example/echo:latest
+```
 
