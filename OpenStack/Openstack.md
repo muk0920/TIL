@@ -79,3 +79,55 @@ AWS 와 유사한 환경을 local 에 구축하는 솔루션
 Scale up : 성능 리소스 박스(물리적 시스템) 내에서 cpu 나 메모리를 증설하는 방식.
 
 Scale out :  복제를 이용하여 박스(물리적 시스템) 단위로 확장하는 방식. 
+
+
+
+
+
+
+
+---
+
+
+
+#### 수업 복습 Day01 
+
+
+
+Cloud Computing 이해 ( On-premise  vs  Cloud )
+
+: 사용자 요청에 따라 공유된 자원이나 데이터를 인터넷 기반으로 제공하는 기술로 
+
+여러 유형의 서비스를 사용한 만큼 지불하는 종량과금제로 제공되는 computing 
+
+
+
+클라우드 서비스 유형 
+
+- IaaS , PaaS, SaaS 
+
+
+
+클라우드 배치 유형 
+
+- Public, Private, Hybrid, Community Cloud 
+
+
+
+
+
+오픈 스택이란 ?
+
+​		클라우드 운영체제 
+
+
+
+- Core Service 이해 
+  - compute - Nova
+  - image - Glance
+  - object storage - Swift
+  - block storage - Cinder
+  - network - Neutron
+  - dashoboard - Horizon 
+  - Identity - Keystone
+  - orchestration - Heat 
