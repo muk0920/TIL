@@ -26,7 +26,7 @@
    (볼륨 마운트는 윈도우에서 테스트가 안될 수도 있다. -  NFS 파일 시스템 때문에 )
 
    ```bash
-   $ docker run --name mongodb_server -v /home/test/mongodb/db:data/db  \
+   $ docker run --name mongodb_server -v /home/test/mongodb/db:/data/db  \
    -d -p 16010:27017 mongo -auth
    
    7d3c81115b76b2a32871bd8b7dea666ab97053102fcd24641befe5d30c10fdec
@@ -113,14 +113,15 @@
      ```
   
      ```bash
-    $ docker run --name mongodb_server_2 -d -p 26010:27017 mongo --replSet myapp
+     $ docker run --name mongodb_server_2 -d -p 26010:27017 mongo --replSet myapp
      ```
-  
+     
      ```bash
      $ docker run --name mongodb_server_3 -d -p 36010:27017 mongo --replSet myapp
      ```
 
    
+
 
    - **Master - 레플리카셋 초기화 및 추가. **
    
@@ -236,8 +237,7 @@
                      "chainingAllowed" : true,
                      "heartbeatIntervalMillis" : 2000,
                      "heartbeatTimeoutSecs" : 10,
-                     "electionTimeoutMillis" : 10000,
-                     "catchUpTimeoutMillis" : -1,
+                     "electionTimeoillis" : -1,
                      "catchUpTakeoverDelayMillis" : 30000,
                      "getLastErrorModes" : {
      
@@ -311,7 +311,7 @@
 
    ```bash
    $ mongo -u "admin" -p "admin" -authenticationDatabase "admin"
-   mongo > use testdb db.createuser({user : "tester", pwd :"1234", roles:["dbAdmin", "readWrite"] })
+   mongo > use testdb db.createuser({ user : "tester", pwd :"1234", roles:["dbAdmin", "readWrite"] })
    ```
 
 
