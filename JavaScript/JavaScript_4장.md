@@ -55,7 +55,7 @@ html 파일을 작성한 이후 테스트를 하기 위해서는 `http://localho
 </html>
 ```
 
-- 위의 html 파일을 실행할 때 만약 `window.onload` 부분이 없다면 오류가 발생할 것이다. 그 이유는 display 에 해당하는 <div> 가 script 하단에 위치하기 때문에 위에서 부터 랜더링 하는 과정에서 오류가 발생하기 때문. 
+- 위의 html 파일을 실행할 때 만약 `window.onload` 부분이 없다면 오류가 발생할 것이다. 그 이유는 display 에 해당하는 `<div>` 가 script 하단에 위치하기 때문에 **위에서 부터 랜더링** 하는 과정에서 오류가 발생하기 때문. 
 - innerText 에서 `+= ` 이 부분이 `=` 이라면 마지막 문장 하나만 화면에 출력된다. 그 이유는 한 문장위에 계속 덮어 씌워지기 때문. 따라서 `+= ` 로 바꿔서 이전 내용에 새롭게 추가하는 방식으로 화면에 출력해야한다.  
 
 ```javascript
@@ -66,7 +66,7 @@ window.onload = function()   // 전체가 다 로딩 된 이후에 해당 구문
 
 Element  - 요소  --> 태그 
 
-Attribute  - 속성  --> 
+Attribute  - 속성  
 
 
 
@@ -386,7 +386,7 @@ Attribute  - 속성  -->
                   });  
                   return value; 
               }
-              // https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+              //https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/find
               function f2() {
                   return Array.from(arguments).find(i => i % 3 === 0);  
               }
