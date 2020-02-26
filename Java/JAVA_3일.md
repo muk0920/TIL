@@ -119,6 +119,69 @@
 
 
 
+예시 ) 
+
+```java
+public class Car {
+    String company = "현대자동자";
+    String model = "그랜저";
+    String color;
+    int maxSpeed = 350;
+    int speed;
+    
+    byte    byteField;
+    short   shortField;
+    int     intField;
+    long    longField;
+    boolean booleanField;
+    char    charField;
+    float   floatField;
+    double  doubleField;
+    int[]   intArrayField;
+    String  stringField;
+    
+    public static void main(String[] args) {
+        Car c = new Car();
+        System.out.println(c.company);
+        System.out.println(c.model);
+        System.out.println(c.color);
+        System.out.println(c.maxSpeed);
+        System.out.println(c.speed);
+        
+        System.out.println("byteField     = " + c.byteField    );
+        System.out.println("shortField    = " + c.shortField   );
+        System.out.println("intField      = " + c.intField     );
+        System.out.println("longField     = " + c.longField    );
+        System.out.println("booleanField  = " + c.booleanField );
+        System.out.println("charField     = " + c.charField    );
+        System.out.println("floatField    = " + c.floatField   );
+        System.out.println("doubleField   = " + c.doubleField  );
+        System.out.println("intArrayField = " + c.intArrayField);
+        System.out.println("stringField   = " + c.stringField  );
+    }
+}
+
+/*
+현대자동자
+그랜저
+null
+350
+0
+byteField     = 0
+shortField    = 0
+intField      = 0
+longField     = 0
+booleanField  = false
+charField     = 
+floatField    = 0.0
+doubleField   = 0.0
+intArrayField = null
+stringField   = null
+ */
+```
+
+
+
 **필드 사용**
 
 - 클래스 내부에서 사용하는 경우 ( 생성자 또는 메소드에서 사용 ) => 필드 이름으로 접근 
@@ -129,13 +192,49 @@
 
 
 
+예시 ) 
+
+```java
+public class Car {
+	String company = "현대자동자";
+	String model = "그랜저";
+	String color = "검정";
+	int maxSpeed = 350;
+	int speed;
+	
+	public void speedUp(int no) {
+		speed += no;
+	}
+
+	public void speedDown(int no) {
+		speed -= no;
+	}
+	
+	public static void main(String[] args) {
+		Car c1 = new Car();
+		Car c2 = new Car();
+		
+		System.out.println("C1 현재 속도: " + c1.speed);
+		System.out.println("C2 현재 속도: " + c2.speed);
+		
+		c1.speed = 60;
+		c2.speedUp(100);
+		
+		System.out.println("C1 변경된 속도: " + c1.speed);
+		System.out.println("C2 변경된 속도: " + c2.speed);
+	}
+}
+```
+
+
+
 #### 생성자 ( Constructor ) 
 
 클래스로부터 new 연산자로 객체를 생성할 때 호출되는 **객체 초기화를 담당하는 메소드** 
 
 클래스 이름과 동일한 이름의 메소드. 
 
-객체 초기화 = 필드를 초기화하거나 메소드를 호춣해서 객체를 사용할 준비를 하는 것 . 
+객체 초기화 = 필드를 초기화하거나 메소드를 호출해서 객체를 사용할 준비를 하는 것 . 
 
 생성자가 성공적으로 동작하면 힙 영역에 객체를 생성하고 객체의 주소를 반환 . 
 
@@ -161,7 +260,7 @@
 
 매개변수는 생략할 수도 있고, 여러개 사용할 수도 있다. 
 
-클래스에 **생성자가 명시적으로 선언된 경우, 반드시 선언된 생성자를 호출해서 객체를 생성**해야한다. 
+클래스에 **생성자가 명시적으로 선언된 경우, 반드시 선언된 생성자를 호출해서 객체를 생성**해야한다.  ( 생성자가 명시적으로 선언된 경우에는 기본 생성자가 생성되지 않기 때문 )
 
 ```java
 public class Car {
@@ -581,7 +680,7 @@ public class CarExample {
 
 - 클래스 내부의 경우, 단순 메소드 이름으로 호출 
 
-- 클래스 외부의 경우, 클래스로부터 객체를 생성한 후 참조변수와 도트연산자를 이용해서 메소드를 호출 
+- 클래스 외부의 경우, 클래스로부터 객체를 생성한 후 **참조변수**와 **도트연산자**를 이용해서 메소드를 호출 
 
   <img src="images/image-20200219143052316.png" alt="image-20200219143052316" style="zoom:80%;" />
 
@@ -674,7 +773,79 @@ yourCar.setSpeed(80);
 
 생성자와 메소드의 매개변수 이름이 필드 이름과 동일한 경우, 필드임을 지정하기 위해서 사용. 
 
+```java
+public class Calculator {
+	//	계산기 마다 상이
+	String color;
+	
+	// 	인스턴스 멤버 필드를 사용해야 하므로, 
+	// 	해당 메소드는 인스터스 메스드로 선언
+	void setColor(String color) {
+		this.color = color;
+	}
+	
+	//	모든 계산기가 동일
+	static double PI = 3.14159; 	
+	
+	static int plus(int x, int y) {
+		return x + y;
+	}
+	
+	static int minus(int x, int y) {
+		return x - y;
+	}
+}
 
+public class CalculatorExe {
+
+	public static void main(String[] args) {
+		//	정적 필드 사용 방법 => 클래스이름.필드명
+		
+		//	반지름이 10인 원의 넓이
+		double result1 = 10 * 10 * Calculator.PI;
+		
+		// 	정적 메소드 사용 방법 => 클래스이름.메소드명()
+		
+		//	10 + 5 와 10 - 5
+		int result2 = Calculator.plus(10, 5);
+		int result3 = Calculator.minus(10, 5);
+		
+		System.out.println("result1 = " + result1);
+		System.out.println("result2 = " + result2);
+		System.out.println("result3 = " + result3);
+	}
+}
+```
+
+
+
+#### 정적 메소드 선언 시 주의사항 -> main() 동일 
+
+```java
+static double PI = 3.14159; 	
+	
+	static int plus(int x, int y) {
+		//	정적 메소드에서 정적 필드를 사용하는 것은 가능
+		System.out.println(PI);
+		System.out.println(Calculator.PI);
+		
+		//	정적 메소드에서 인스턴스 필드, 메소드, this를 사용하는 것은 불가능
+		/*
+		this.setColor("red");
+		System.out.println(color);
+		System.out.println(this.color);
+		*/
+
+		//	정적 메소드에서 인스턴스 필드와 메소드를 사용하기 위해서는 
+		//	반드시 해당 객체를 생성한 후 사용해야 함
+		Calculator c = new Calculator();
+		c.setColor("red");
+		System.out.println(c.color);
+		
+		return x + y;
+	}
+
+```
 
 
 
@@ -695,6 +866,45 @@ public class 클래스명 {
     public static 클래스명 getInstance() { 
     	return singleton ;
     }
+}
+
+클래스명 변수1 = 클래스명.getInstance(); 
+클래스명 변수2 = 클래스명.getInstance(); 
+```
+
+![image-20200226184529134](images/image-20200226184529134.png)
+
+```java
+
+public class Singleton {
+	//	디폴트 생성자가 호출되는 것을 막고, 
+	//	외부에서 생성자 호출을 통해서 객체가 생성되는 것을 막는 것
+	private Singleton() { }
+	
+	private static Singleton singleton = new Singleton();
+	
+	public static Singleton getInstance() {
+		return singleton;
+	}
+}
+
+
+public class SingletonExe {
+	public static void main(String[] args) {
+		/*
+		//	The constructor Singleton() is not visible
+		Singleton obj1 = new Singleton();
+		*/
+		
+		Singleton obj1 = Singleton.getInstance();
+		Singleton obj2 = Singleton.getInstance();
+		
+		if (obj1 == obj2) {
+			System.out.println("" + obj1 + ", " + obj2 + "같은 Singleton 객체 입니다.");
+		} else {
+			System.out.println("다른 Singleton 객체 입니다.");
+		}
+	}
 }
 ```
 
