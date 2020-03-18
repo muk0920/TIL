@@ -1,33 +1,34 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
-import Rooms from './Rooms';
 
-class App extends Component {
+class Todo extends Component {
+  state = {
+    priority : 'high',
+  }
+
+  onClick = () =>{ 
+    const {priority} = this.state; 
+    this.setState({priority : priority === 'high' ? 'low' : 'high'}); 
+  }
+
   render() {
+    const {title, desc} = this.props; 
+    const {priority} = this.state; 
+
     return (
-      <BrowserRouter>
-        <div style={{ padding: 20, border: '5px solid gray' }}>
-          <Link to="/">홈</Link>
-          <br />
-          <Link to="/photo">사진</Link>
-          <br />
-          <Link to="/rooms">방 소개</Link>
-          <br />
-          <Route exact path="/" component={Home} />
-          <Route path="/photo" component={Photo} />
-          <Route path="/rooms" component={Rooms} />
-        </div>
-      </BrowserRouter>
+      <div>
+        <Title title={title} />
+        <p>{desc}</p>    
+        <p>{priority === 'high' ? '우선순위 높음' : '우선순위 낮음'}</p>
+        <button onClick={this.onClick}> 우선순위 변경 </button>
+      </div>
     );
   }
 }
 
-function Home({ match }) {
-  return <h2>이곳은 홈페이지입니다.</h2>
+class Title extends React.PureComponent{ 
+  render(){
+    const { title } = this.props; 
+    return <p style ={{ color : 'blue' }}> {title} </p>
+  }
 }
-
-function Photo({ match }) {
-  return <h2>여기서 사진을 감상하세요.</h2>
-}
-
-export default App;
+export default Todo;
