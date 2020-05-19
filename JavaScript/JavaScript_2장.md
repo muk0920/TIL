@@ -176,6 +176,22 @@ Snake Expression -> ex) will_out
 
 
 
+**호이스팅** - var 선언문이나 function 선언문 등을 해당 스코프의 선두로 옮긴 것처럼 동작하는 특성 
+
+자바스크립트는 ES6 에서 도입된 let, const 를 포함하여 모든 선언(var, let, cosnt, function, function* class) 를 호이스팅한다. 
+
+반면 var 로 선언된 변수와는 달리 let 으로 선언된 변수를 선언문 이전에 참조하면 참조 에러 발생 
+
+```javascript
+console.log(foo); // undefined
+var foo; 
+
+console.log(bar); // Error: Uncaught ReferenceError: bar is not defined
+let bar;  // 선언 이전에 참조할 경우 참조 에러 발생 
+```
+
+
+
 
 
 ---
@@ -200,9 +216,9 @@ LF -> 라인 피드 ( 다음줄로 넘기는 과정 )
 
 ---
 
-- 숫자와 문자열 덧셈 연산은 문자열이 우선된다. 
+- 숫자와 문자열 덧셈 연산은 **문자열이 우선**된다. 
 
-- 숫자와 문자열 덧셈을 제외한 사칙연산은 숫자가 우선. 
+- 숫자와 문자열 **덧셈을 제외한 사칙연산은 숫자가 우선**. 
 
   
 
