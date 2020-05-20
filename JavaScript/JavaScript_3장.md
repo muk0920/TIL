@@ -151,7 +151,7 @@ HTML Basic ~ HTML id 까지는 혼자서 꼭 보기.
 
 **typeof()**는 연산자에 속한다. 
 
-**Boolean()** 함수 : 다른 자료형을 불 (bool) 자료형으로 변환  -> 명시적인 형변환
+**Boolean()** 함수 : 다른 자료형을 불 (bool) 자료형으로 변환  -> 명시적인 형변환(강제적 형변환)
 
 ​								**0, NaN, '', null, undefined**  -> false 로 변환 
 
@@ -163,9 +163,9 @@ HTML Basic ~ HTML id 까지는 혼자서 꼭 보기.
 
 0, NaN, '', null, undefined 데이터에 대한 암시적인 형변환  -> Boolean() 함수의 결과와 동일 
 
-![image-20200123114136472](images/image-20200123114136472.png)
+<img src="C:\Users\User\AppData\Roaming\Typora\typora-user-images\image-20200519121359466.png" alt="image-20200519121359466" style="zoom:80%;" />
 
-
+​			NaN 은 비교 연산자를 이용하여 판단이 불가능하기 때문에, `isNaN()` 함수를 사용 
 
 **일치 연산자**  : 양변의 자료형과 값의 일치 여부를 확인 
 
@@ -261,7 +261,7 @@ HTML Basic ~ HTML id 까지는 혼자서 꼭 보기.
 
 
 
-```javascript
+```html
 <script>
             let value = 0; 
 
@@ -294,7 +294,7 @@ HTML Basic ~ HTML id 까지는 혼자서 꼭 보기.
     </script>
 ```
 
-```javascript
+```html
     <script>
         //  숫자 맞추기 게임
         //  1~20 사이의 임의의 숫자를 맞추는 게임
@@ -322,7 +322,7 @@ HTML Basic ~ HTML id 까지는 혼자서 꼭 보기.
 
 - **for 문  4가지 방법**
 
-  ```javascript 
+  ```html
       <script>
           const fruits = [ "사과", "오렌지", "딸기", "바나나" ];
    
