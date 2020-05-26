@@ -6,6 +6,8 @@
 
 
 
+# PART 1  - JAVA SCRIPT 
+
 # 1강_개발 환경과 파일생성 및 실행 방법
 
 - 텍스트 에디터 필요 (visual code)
@@ -558,7 +560,7 @@
 
 
 
-## if 문 
+## 3.1 if 문 
 
 - `if( <불표현식> ){   }`
 
@@ -586,7 +588,7 @@
 
 
 
-## switch 조건문 
+## 3.2 switch 조건문 
 
 - ```html
   <script>
@@ -635,7 +637,7 @@
 
 
 
-## 삼항 연산자 
+## 3.3 삼항 연산자 
 
 - 항이 3개라는 의미로, 조건부 연산자를 의미. 
 
@@ -651,7 +653,7 @@
 
 
 
-## 짧은 조건문 
+## 3.4 짧은 조건문 
 
 
 
@@ -954,10 +956,10 @@
 
 - **함수를 사용하는 이유** 
 
- 	1. 코드를 입력하는 양이 줄어든다.
- 	2. 수정했을 때 실수 없이 수정할 수 있다. 
- 	3. 가독성이 좋아진다. 
- 	4. 재사용이 가능하다. 
+   	1. 코드를 입력하는 양이 줄어든다.
+      	2. 수정했을 때 실수 없이 수정할 수 있다. 
+              	3. 가독성이 좋아진다. 
+            	4. 재사용이 가능하다. 
 
 
 
@@ -1093,4 +1095,1960 @@
 ```
 
 ![image-20200525172406280](images/image-20200525172406280.png)
+
+
+
+
+
+## 5.11 자바스크립트 내장 함수 
+
+
+
+- 자바스크립트 내에 탑재되어 있는 기본 함수 
+
+
+
+- setTimeout() : 특정 시간 후에 함수를 1번만 실행하는 함수 
+- clearTimeout() 
+
+```html
+<script>	
+    let id = setTimeout(function () {
+        alert('1초가 지났다.');
+    },1000);	
+
+    clearTimeout(id);  // setTimeout() 으로 설정한 타이머 제거
+</script>
+```
+
+
+
+- setInterval()  : 계속 반복 
+
+- clearInterval() 
+
+```html
+<script>	
+    let id = setInterval(function(){
+        alert('1초마다 실행')
+    },1000);
+
+    setTimeout(function(){
+        clearInterval(id); 
+    },3000);
+</script>
+```
+
+
+
+
+
+- 인코딩 ( Encoding )
+
+- 디코딩 ( Decoding ) 
+
+  <img src="images/image-20200526095554049.png" alt="image-20200526095554049" style="zoom: 80%;" />
+
+```html
+<script>
+    let a = escape("초콜릿")
+    let b = unescape(a); 
+
+    console.log(a); 
+    console.log(b); 
+</script>
+```
+
+![image-20200526095504662](images/image-20200526095504662.png)
+
+
+
+- `isFinite()`  : 셀 수 있을 경우 true , 셀 수 없을 경우 false 
+
+  ```html
+  <script>
+      console.log(isFinite(10/0)); 
+      console.log(isFinite(-10/0));
+      console.log(isFinite(10)); 
+      console.log(isFinite(Number.MAX_VALUE));
+      console.log(isFinite(Number.MIN_VALUE));
+  </script>
+  ```
+
+  <img src="images/image-20200526100054618.png" alt="image-20200526100054618" style="zoom:80%;" />
+
+- `isNaN ()` : NaN 일 경우 true, 아닐 경우 False 
+
+- `is` 로 시작하는 함수는 대체적으로 True 나 False 를 반환. 
+
+
+
+- `parseInt()` 
+- `parseFloat()` 
+
+```html
+<script>
+	console.log(parseInt("200가나다라")); 		// 200
+    console.log(parseFloat("52.273가나다라")); 	// 52.273
+</script>
+```
+
+
+
+
+
+## 5.12 조금 더 나아가기 
+
+
+
+### 5.12.1 자바스크립트의 실행 순서 
+
+```html
+<script>
+    // A를 출력해야겠다. 
+    alert('A'); 
+
+    // 뭔지는 모르겠지만 0초 후에 실행을 해야한다 => 기록/예약 걸어둔다
+    setTimeout(function(){
+        alert('B')
+    },0); 
+
+    // C를 출력해야겠다. 
+    alert('C'); 
+
+    // 예약된걸 확인 : B 를 출력해야겠다. 
+
+    // A -> C -> B 
+</script>
+```
+
+```html
+<script>
+    // A를 출력해야겠다. 
+    alert('A'); 
+
+    // 뭔지는 모르겠지만 0초 후에 실행을 해야한다 => 기록/예약 걸어둔다
+    setTimeout(function(){
+        alert('B')
+    },0); 
+
+    // C를 출력해야겠다. 
+    alert('C'); 
+	
+    // 무한 반복 
+    while(true) {}
+    
+    // 실행 끊김 
+    // A -> C  ( B는 실행 안된다. )
+</script>
+```
+
+
+
+
+
+### 5.12.2 반복문과 콜백함수 
+
+```html
+<script>
+	// let const var   
+    // var 전역변수를 선언하는 키워드 
+    for(var i=0; i<3; i++){
+        // i=0
+        // 예약을 걸고! 
+        // i=1
+        // 예약을 걸고! 
+        // i=2
+        // 예약을 걸고    
+        setTimeout(function(){alert(i); },0); 
+    }
+    // i=3
+    //    function(){ alert(3)}; 
+    //	  function(){ alert(3)}; 
+	//    function(){ alert(3)}; 
+    // 계속 3만 출력 . 
+</script>
+```
+
+
+
+- 1번째 방법
+
+```html
+<script>
+	// let const var
+    // 스코프 내부에서만 작동하는 변수를 선언 
+    for(let i=0; i<3; i++){
+        // i=0
+        // 예약을 걸고! 
+        // i=1
+        // 예약을 걸고! 
+        // i=2
+        // 예약을 걸고    
+        setTimeout(function(){alert(i); },0); 
+    }
+</script>
+```
+
+- 2번째 방법 
+
+```html
+<script>
+	for(var i=0; i<3; i++){
+        (function(i){
+            setTimeout(function() {
+                alert(i); 
+            },0);
+        })(i);     // 클로저 형성  
+    }
+</script>
+```
+
+
+
+### 5.12.3 기본 매개변수 
+
+```html
+<script>
+    // ECMAScript5 
+	function test(a,b,c){
+        // a 가 undefined => a = 10 
+        
+        if(typeof(a) == "undefined")  { a=10; } 
+        if(!b) {b = 20; } 
+        c = c || 30; 
+        
+        alert(a+b+c); 
+    }
+    
+    function test(a=10, b=20, c=30){
+        alert(a+b+c);  // 기본 매개변수는 뒤쪽에 붙여서 사용할 수 있다. 
+    }
+    
+</script>
+```
+
+
+
+
+
+### 5.12.4 화살표 함수 
+
+```html
+<script>
+	function () {}   
+    () => { }  
+</script>
+```
+
+- 화살표 함수 내부에서는 arguments 를 사용할 수 없다. 
+- 화살표 함수 내부에서는 전개 연산자 (`...`) 을 사용한다. 
+  - 전개연산자는 마지막 하나만 사용할 수 있다. 
+
+```html
+<script>
+    var sumAll = (a,b,...numbers) =>{
+        var output = 0 ; 
+        for(var i=0; i<numbers.length; i++){
+            output += numbers[i]
+        }
+        return output; 
+    }
+    
+    var array=  [1,2,3,4,5,6,7,8,9] 
+    // ECMAScript 5 
+    sumAll.apply(null, array); 
+    // ECMAScript 6
+    sumAll(...array); 
+    
+    console.log(sumAll(1,2,3,4,5)); 
+</script>
+```
+
+
+
+
+
+
+
+# 6강 객체 
+
+
+
+- 객체는 `{ } ` 를 이용해서 생성. 
+
+- 배열은 인덱스로 접근, 객체는 키로 접근 
+
+```html
+<script>
+	// 객체 생성 
+    var object = {
+        키A : "값A", 
+        키B : "값B", 
+        키C : "값C",         
+    } ; 
+    
+    // 객체 요소 접근 
+    object["키A"]
+    
+    object[키A] // object[undefined]
+    
+    object.키A
+    
+    // 반복문 사용 
+    for (var i in object)
+        alert(object[i]); 
+</script>
+```
+
+
+
+## 6.2 속성과 메서드 
+
+
+
+<img src="images/image-20200526103550301.png" alt="image-20200526103550301" style="zoom: 50%;" />
+
+```html
+<script>
+	// 변수 선언 
+    
+    var person = {
+        naem = '박상우', 
+        eat : function (food) {
+            alert(this.name + "이" + food + "을/를 먹습니다. ");		// this 를 생략할 수 없다.
+        }
+    }
+    
+    person.eat('밥'); 
+</script>
+```
+
+```html
+<script>
+	// 변수 선언 
+    
+    var person = {
+        naem = '박상우', 
+        eat_a : function (food) {
+            alert(this.name + "이" + food + "을/를 먹습니다. ");		// this 를 생략할 수 없다.
+        }
+    	eat_b : (food) =>{
+            alert(this.name + '이' + food + '을/를 먹습니다' ) ; // 화살표 함수는 this 를 바인드 하지 않는다. 
+        }
+    }
+    
+    person.eat_a('밥');
+    person.eat_b('밥'); 
+</script>
+```
+
+- `this` 키워드를 사용하기 위해서는 화살표 함수를 사용하면 안된다. 
+
+
+
+
+
+## 6.4 객체 관련 키워드 
+
+
+
+- `<문자열> in <객체>`  : 객체 안에서 해당 문자열이 있는지 확인하는 키워드 
+
+- `with() {  } `  
+
+  <img src="images/image-20200526104059858.png" alt="image-20200526104059858" style="zoom:67%;" />
+
+
+
+
+
+## 6.5 객체의 속성 추가와 제거 
+
+
+
+- 속성 추가 
+
+```html
+<script>
+	var student = {}; 
+    
+    console.log(student); 
+    student.이름 = "박상우" ;	// 동적으로 속성 추가 
+    console.log(student); 
+</script>
+```
+
+
+
+- 속성 제거 
+
+  - `delete` 키워드 사용 	
+
+  ```html
+  <script>
+  	var student = {}; 
+     
+      student.이름 = "박상우" ;	// 동적으로 속성 추가 
+      console.log(student); 
+      delete student.이름 
+      console.log(student); 
+  </script>
+  ```
+
+
+
+
+
+## 6.6 객체와 배열을 사용한 데이터 관리 
+
+
+
+- **추상화** : 현실에 있는 객체를 모두 모방하는 것이 아니라 프로그램에 필요한 속성만을 가져와서 객체화 하는 것. 
+
+ <img src="images/image-20200526104858093.png" alt="image-20200526104858093" style="zoom:50%;" />
+
+ <img src="images/image-20200526105030323.png" alt="image-20200526105030323" style="zoom:50%;" />                                                           ![image-20200526105049072](images/image-20200526105049072.png)
+
+​																							▼
+
+```html
+<script>
+	function createStudent(이름,국어,수학,영어,과학){
+        var object = {
+            이름 : 이름, 
+            국어 : 국어, 
+            수학 : 수학, 
+            영어 : 영어, 
+            과학 : 과학 
+        }
+        object.getSum = function () {
+            return this.국어 + this.수학 + this.영어 + this.과학;    
+        }
+
+        object.getAverage = function(){
+            return this.getSum()/4 ; 
+        }
+
+        object.toString = function(){
+            return this.이름 + '\t' + this.getSum() + '\t' + this.getAverage() +'\n'; 
+        }
+        
+         return object; 
+    }
+</script>
+```
+
+
+
+## 6.8 참조 복사와 값 복사 
+
+- 두 개의 변수가 완전한 독립성을 갖는 것을 **값 복사** 또는  "**깊은 복사**"라고 부른다. 
+
+```html
+<script>
+	var originalValue = 10; 
+    var newValue = originalValue;
+    // 원본 값 변경 
+    originalValue = 273; 
+    // 출력 
+    console.log(originalValue);	// 273 
+    console.log(newValue);		// 10
+</script>	
+```
+
+- 기본 자료형(숫자,문자,불)으로 선언된 값을 value 라고 한다. 
+
+```html
+<script>
+	var originalArray = [1,2,3,4]; 
+    var newArray = originalArray ; 
+    // 원본 배열 값 변경 
+    originalArray[0] = 273; 
+    // 출력 
+    console.log(originalArray) ;	// [273,2,3,4]
+    console.log(newArray); 			// [273,2,3,4]
+</script>
+```
+
+- 기본 자료형을 제외한 자료형 (함수, 배열, 객체 등 ..)은 메모리의 주소를 할당한다. 
+
+
+
+- 깊은 복사 하는 방법. ( 각각의 요소들을 직접 복사 ) or `clone()` 메서드 사용. 
+
+```html
+<script>
+	var originalArray = [1,2,3,4] ; // 0x10
+    var newArray = [] ; // 0x20
+    for(var i=0; i<originalArray.length; i++)
+        newArray[i] = originalArray[i]; 
+</script>
+```
+
+
+
+
+
+# 7강 
+
+
+
+## 7.2 프로토 타입 
+
+
+
+- 생성자 함수는 **앞글자를 대문자**로 시작한다. 
+
+```html
+<script>
+	function Student(이름,국어,수학,영어,과학) {
+        this.이름 : 이름, 
+        this.국어 : 국어, 
+        this.수학 : 수학, 
+        this.영어 : 영어, 
+        this.과학 : 과학 
+    } 	
+        
+    Student.prototype.getSum= function (){
+        return this.국어 + this.수학 + this.영어 + this.과학;    
+    }
+        
+    Student.prototype.getAverage = function(){
+       return this.getSum()/4 ; 
+    }
+
+    Student.prototype.toString = function(){
+       return this.이름 + '\t' + this.getSum() + '\t' + this.getAverage() +'\n'; 
+    }
+</script>
+```
+
+- getSum, getAverage, toString 는 공유된 공간에 선언되었다고 생각해라. 
+- 생성자 함수를 호출할 때는 `new` 를 붙여서 호출한다. 
+- 생성자 함수로 객체화된 것은 인스턴스 라고 부른다. 
+
+
+
+- 위의 프로토 타입을 클래스로 변환한 코드 
+
+```html
+<script>
+    class Student { 
+    	constructor(이름,국어,수학,영어,과학){
+            this.이름 : 이름, 
+            this.국어 : 국어, 
+            this.수학 : 수학, 
+            this.영어 : 영어, 
+            this.과학 : 과학 
+        }
+    }
+
+    getSum(){
+        return this.국어 + this.수학 + this.영어 + this.과학;    
+    }
+        
+    getAverage(){
+       return this.getSum()/4 ; 
+    }
+
+    toString(){
+       return this.이름 + '\t' + this.getSum() + '\t' + this.getAverage() +'\n'; 
+    }
+</script>
+```
+
+
+
+## 7.4 캡슐화 
+
+- 변수를 보호하는 것. 
+
+- 1. 밑줄(`_` ) 로 시작하는 변수는 **"절대 건드리지 말자" 라는 약속** 
+
+- 2. 
+
+  ```html
+  <script>
+  	function Rectangle(width, height){
+          var _width = width ; 
+          var _height = height; 
+          
+          this.getWidth = function (){ 
+          	return _width; 
+          }
+          this.getHeight = function(){ 
+          	return _height; 
+          }
+          this.setWidth = function(value){
+              if(value <= 0)	return alert('0보다 작은 값 x ') ; 
+              _width = value; 
+          }
+          this.setHeight = function(value){
+              if(value <=0 ) return alert('0보다 작은 값 x'); 
+              _height = value; 
+          }
+      }
+      
+      Rectangle.prototype.getArea = function(){
+          return this._width * this._height; 
+      }
+      
+      var rectangel = new Rectangle(5,7); 
+  </script>
+  ```
+
+  - 약간의 메모리가 낭비되지만, 변수를 보호하는 역할에 초점. 
+
+
+
+- 위의 2가지 약속을 타협하여 아래와 같이 사용 .
+
+  ```html
+  <script>
+  	function Rectangle(width, height){
+          this._width = width ; 
+          this._height = height; 
+      }
+      Rectangle.prototype.getWidth = function (){ 
+          	return _width; 
+      }
+      Rectangle.prototype.getHeight = function(){ 
+          return _height; 
+      }
+      Rectangle.prototype.setWidth = function(value){
+          if(value <= 0)	return alert('0보다 작은 값 x ') ; 
+          _width = value; 
+      }
+      Rectangle.prototype.setHeight = function(value){
+          if(value <=0 ) return alert('0보다 작은 값 x'); 
+          _height = value; 
+      }
+      Rectangle.prototype.getArea = function(){
+          return this._width * this._height; 
+      }
+      
+      var rectangel = new Rectangle(5,7); 
+  </script>
+  ```
+
+  
+
+## 7.5 상속 
+
+- 부모가 가지고 있는 속성을 자식이 재활용 하겠다. 
+
+
+
+
+
+
+
+# 8강 기본 내장 객체 
+
+
+
+## 8.1 기본 자료형과 객체의 차이점 
+
+```html 
+<script>
+	var primitiveNumber = 273;
+    var objectNumber = new Number(273); 
+    
+    // 출력 
+    var output =''; 
+    output += typeof(primitiveNumber) + ':' + primitiveNumber + '\n'
+    output += typeof(objectNumber) + ':' + objectNumber; 
+    alert(output);  
+    
+    // number : 273
+    // object : 273
+</script>
+```
+
+- 기본 자료형 뒤에 `.` 을 찍으면 **일시적**으로 객체로 변환이 일어나게 돼서 내부에 있는 메서드를 사용할 수 있다. 
+
+
+
+- 우리가 원하는 기능을 기본 자료형에 추가해서 일시적으로 사용할 수 있다. 
+
+  ```html
+  <script>
+  	var primitiveNumber = 273 ; 
+      var objectNumber = new Number(273); 
+      
+      Number.prototype.power = function(){
+          return this*this; 
+      }
+      
+      alert(primitiveNumber.power()); 
+  </script>
+  ```
+
+
+
+
+
+## 8.2 Object 객체 
+
+
+
+- 객체를 생성하는 방법 
+
+  ```html
+  <script>
+  	var object = {}; 
+      var object = new Object(); 
+  </script>
+  ```
+
+  
+
+- object 는 모든 자바스크립트의 기본 객체의 부모 객체이다. 
+
+
+
+- ```html
+  <script>
+  	var pritimitiveNumber = 273; 
+      var objectNumber = new Number(52); 
+      
+      console.log(typeof(pritimitiveNumber));	// number 
+      console.log(typeof(objectNumber)); // object
+  </script>
+  ```
+
+  자바스크립트의 개발자들은 object 도 숫자로 취급하고 싶어한다. 
+
+  1. `constructor` 객체를 사용한다. 
+
+     ```html
+     <script>
+         
+         function isNumber(value){
+             return value.constructor === Number; 
+         }
+         
+     	var pritimitiveNumber = 273; 
+         var objectNumber = new Number(52); 
+         
+         console.log(pritimitiveNumber.constructor);	// number 
+         console.log(objectnumber.constructor); // number
+         
+         console.log(isNumber(pritimitiveNumber)); 
+         console.log(isNumber(objectNumber));
+     </script>
+     ```
+
+  2. `isNumber` 
+
+     ```html
+     <script>
+         
+         function isNumber(value){
+             return value.constructor === Number; 
+         }
+         
+     	var pritimitiveNumber = 273; 
+         var objectNumber = new Number(52); 
+         
+         console.log(isNumber(pritimitiveNumber));	// true 
+         console.log(isNumber(objectNumber));		// true
+     </script>
+     ```
+
+     - underscore.js : 자바스크립트의 기본적인 기능을 모두 구현한 녀석 
+
+       <img src="images/image-20200526115618920.png" alt="image-20200526115618920" style="zoom:80%;" />
+
+       ```html
+       <script>
+       	console.log(({}).toString.call(10)); 			// [object Number]
+           console.log(({}).toString.call("문자열")); 	  // [object String]
+           console.log(({}).toString.call(new Date())); 	// [object Date]
+           
+           var _ = {}; 
+           _["isNumber"] = function (obj){
+               return toString.call(obj) === '[object Number]'
+           }
+       </script>
+       ```
+
+       - 객체의 `toString` 메서드는 기본적으로 `[object <현재 자료형>]` 을 출력한다.
+
+
+
+
+
+### **비파괴적 메서드**  
+
+- 자기 자신을 파괴시키지 않고 사용하는 메서드 
+
+  일반적으로 string 메서드들은 비파괴적 메서드이다. 
+
+```html 
+<script>
+	var string = "Hello Programming ...! " 
+    string.toUpperCase() // 비 파괴적 메서드 이기 때문에 그냥 나온다 
+    console.log(string); // Hello Programming ...!
+    
+    string = string.toUpperCase(); 
+    console.log(string);  // HELLO PROGRAMMING ...! 
+</script>
+```
+
+- **메서드 체이닝** 
+
+  ```html
+  <script>
+  	var string = "Hello Programming...!" ; 
+      string = string 
+      	.toUpperCase()
+      	.fontcolor("red")
+      	.anchor("test")
+      console.log(string); 
+   // <a name="test"><font color="red">HELLO PROGRAMMING...!</font></a>
+  </script>
+  ```
+
+  
+
+### **파괴적 메서드** 
+
+-  자기 자신을 변형시키면서 사용하는 메서드 
+
+  일반적으로 배열 메서드들이 파괴적 메서드이다. 
+
+```html
+<script>
+	var array = [1,2,3,4,5,6]
+    array.push(7)
+    array.push(8)
+    array.push(9)
+    console.log(array); // 1,2,3,4,5,6,7,8,9
+    array.reverse(); 
+    console.log(array); // 9,8,7,6,5,4,3,2,1
+</script>
+```
+
+
+
+### 8.10.3 underscore 라이브러리 
+
+- 자바스크립트의 기본적인 유틸리티 기능을 모아둔 라이브러리 
+- http://underscore.org
+
+
+
+- 라이브러리 가져오기 
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  	<head>
+  		<script src="underscore.js"></script>
+          <script>
+         		 
+          </script>
+  	</head>
+  	<body>
+  		
+  	</body>
+  </html>
+  ```
+
+  - script 태그는 위에서 아래로 실행되기 때문에 라이브러리는 위쪽에 모아서 적어야한다. 
+
+
+
+- ```html
+  <!DOCTYPE html>
+  <html>
+  	<head>
+  		<script src="underscore.js"></script>
+          <script>
+         		var array = [
+                  {이름 : "바나나" , 가격 : 500},
+                  {이름 : "사과", 가격 : 600}, 
+                  {이름 : "배" , 가격 :300}
+              ];
+              
+              // 함수 방식 (비파괴적 함수)
+              var output = _.sortBy(array, function(item){ return item.가격; }) // 첫번째 : 리스트,  두번째 : 정렬방식 
+              _.sortBy(array, (item) => item.가격) // 위의 코드와 동일(화살표함수사용)
+              // 객체 방식 
+              _(array).sortBy(array, function(item){ return item.가격; })
+              
+              console.log(output); 
+          </script>
+  	</head>
+  	<body>
+  		
+  	</body>
+  </html>
+  ```
+
+
+
+
+
+
+
+# 9강 브라우저 객체 모델 
+
+
+
+![image-20200526163638721](images/image-20200526163638721.png)
+
+웹 브라우저에서 사용하는 객체의 가장 상위에는 window 가 있다. 
+
+
+
+- window.location
+- window.navigator
+- window.history
+- window.screen
+- window.document 
+
+
+
+```html
+<script>
+	window.onload = function(){
+        
+    }
+</script>
+```
+
+- window 가 load 가 완료될 때 실행되는 부분. 
+
+  
+
+- 
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+        <script>
+       		console.log('process-0')
+        </script>
+	</head>
+	<body>
+		<h1> process-1</h1>
+		<script>
+       		console.log('process-2')
+        </script>
+        <h2> process-2</h2>
+        <script>
+       		console.log('process-3')
+        </script>
+	</body>
+</html>
+```
+
+- 위에서 아래로 읽는다. 
+- 내부에 있는 값을 조작하기 위해서 조작하는 부분을 아래로 내리거나, `window.onload()` 를 사용해서 조작한다. 
+
+<img src="images/image-20200526164217665.png" alt="image-20200526164217665" style="zoom:67%;" />
+
+
+
+
+
+
+
+# 10강 문서객체 모델 
+
+- 웹 브라우저가 html 페이지를 인식하는 방법 
+
+<img src="images/image-20200526164608897.png" alt="image-20200526164608897" style="zoom:67%;" />
+
+- 각 요소를 '노드' 라고 부른다. 
+- 문자열이 입력된 부분은 '텍스트 노드' 라 부른다.
+- html, head, title 등과 같은 부분은 '요소 노드' 라고 부른다. 
+
+
+
+### 요소 노드 만들기 
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+	<script>		
+		window.onload = function(){
+			var header = document.createElement("h1")
+			var image = document.createElement("img")
+			
+			document.body.appendChild(header); 
+			document.body.appendChild(image); 		
+		}
+	</script>
+</head>
+<body>
+ 
+</body>
+</html>
+```
+
+![image-20200526165121234](images/image-20200526165121234.png)
+
+### 텍스트 노드 만들기 
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+	<script>		
+		window.onload = function(){
+			var header = document.createElement("h1")
+			var textNode = document.createTextNode("Hello World! ")
+			
+			document.body.appendChild(header); 
+			header.appendChild(textNode);
+			 		
+		}
+	</script>
+</head>
+<body>
+ 
+</body>
+</html>
+```
+
+<img src="images/image-20200526165235121.png" alt="image-20200526165235121" style="zoom:67%;" />
+
+
+
+### 속성 노드 만들기  
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+	<script>		
+		window.onload = function(){
+			var header = document.createElement("h1")
+			var textNode = document.createTextNode("Hello World! ")
+			document.body.appendChild(header); 
+			header.appendChild(textNode);
+			
+			var image = document.createElement("img"); 
+			document.body.appendChild(image); 
+			
+			var attrNode = document.createAttribute("src") 
+			attrNode.value = "http://placehold.it/300x300"
+			image.setAttributeNode(attrNode); 
+		}
+	</script>
+</head>
+<body>
+ 
+</body>
+</html>
+```
+
+<img src="images/image-20200526165528219.png" alt="image-20200526165528219" style="zoom:67%;" />
+
+ 
+
+- 위의 방법들을 조금 더 간단하게 
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  	<script>		
+  		window.onload = function(){
+  			var header = document.createElement("h1")
+  			header.innerHTML = "Hello World"; 
+  			//var textNode = document.createTextNode("Hello World! ")
+  			//header.appendChild(textNode);
+  			
+  			var image = document.createElement("img"); 
+  			image.setAttribute("src", "http://placehold.it/300x300"); // 1번 방법
+  			image.src = "http://placehold.it/300x300";  // 2번 방법
+  			
+  			//var attrNode = document.createAttribute("src") 
+  			//attrNode.value = "http://placehold.it/300x300"
+  			//image.setAttributeNode(attrNode);
+  			
+  			document.body.appendChild(header); 
+  			document.body.appendChild(image);
+  			
+  		}
+  	</script>
+  </head>
+  <body>
+   
+  </body>
+  </html>
+  ```
+
+
+
+
+
+- ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  </head>
+  <body>
+   	<script>
+   		document.body.innerHTML = "<h1>Hello World...! </h1>"
+  		document.createElement("h1").innerHTML;
+   		</script>
+  </body>
+  </html>
+  ```
+
+<img src="images/image-20200526170518140.png" alt="image-20200526170518140" style="zoom:67%;" />
+
+
+
+- ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  </head>
+  <body>
+   	<script>
+   		for(var i=0; i<10; i++){
+   			document.body.innerHTML += "<h1>Hello World - " + i + "</h1>"
+   		}	
+   	</script>
+  </body>
+  </html>
+  ```
+
+<img src="images/image-20200526170710274.png" alt="image-20200526170710274" style="zoom:50%;" />
+
+
+
+- ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  </head>
+  <body>
+   	<script>
+   		for (var i=0 ; i<10; i++){
+   			var text = "<h1>Hello World - " + i + "</h1>"
+   			text = text.replace(/\</g,"&lt;"); 
+   			text = text.replace(/\>/g,"&gt;");
+   			document.body.innerHTML += text; 
+   		}	
+   	</script>
+  </body>
+  </html>
+  ```
+
+![image-20200526170927775](images/image-20200526170927775.png)
+
+
+
+
+
+
+
+- html sanitize 검색해서 봐보기 .
+
+
+
+
+
+## 10.5 문서 객체 모델 가져오기 
+
+
+
+### `getElementById` 를 사용 
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+ 	<h1 id = "hello-a"> Hello World A </h1>
+ 	<h1 id = "hello-b"> Hello World B </h1>
+ 	
+ 	<script>
+ 		var helloA = document.getElementById("hello-a");
+ 		var helloB = document.getElementById("hello-b")
+ 		
+ 		helloA.setAttribute("title", "hello"); 
+ 		helloB.innerHTML = "안녕하세요B. !"
+ 		
+ 	</script>	
+</body>
+</html>
+```
+
+<img src="images/image-20200526171229718.png" alt="image-20200526171229718" style="zoom: 67%;" />
+
+
+
+### `document.querySelector`
+
+- 객체를 하나만 들고오는것. 
+
+- 매개변수에는 선택자를 지정. 
+
+- 가장 처음에 발견하는 것을 가져온다. 
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+ 	<h1 id = "hello-a" class="test" title="hello"> Hello World A </h1>
+ 	<h1 id = "hello-b"> Hello World B </h1>
+ 	
+ 	<script>
+ 		var headerA = document.querySelector("h1")
+ 		headerA.style.color = "red" 
+ 		
+ 		var headerB = document.querySelector("#hello-a")
+ 		headerB.style.fontSize = "10px" 
+ 		
+ 		var headerC = document.querySelector(".test") 
+ 		headerC.style.fontFamily = "맑은고딕"
+ 		
+ 		var headerD = document.querySelector("[title=hello]")
+ 		headerD.style.textAlign = "center"
+ 	</script>	
+</body>
+</html>
+```
+
+![image-20200526171918589](images/image-20200526171918589.png)
+
+
+
+### `document.querySelectorAll` 
+
+- 한개가 아닌 모두 가져온다. 
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  </head>
+  <body>
+   	<h1 id = "hello-a" class="test" title="hello"> Hello World A </h1>
+   	<h1 id = "hello-b"> Hello World B </h1>
+   	
+   	<script>
+   		var colors = ["red", "blue"]; 
+   		var array = document.querySelectorAll("h1")
+   		for (var i=0; i<array.length; i++){
+   			array[i].style.color = colors[i]
+   		}
+   	</script>	
+  </body>
+  </html>
+  ```
+
+  <img src="images/image-20200526172144612.png" alt="image-20200526172144612" style="zoom:50%;" />
+
+
+
+ ## 10.8 문서 객체 스타일 조작 
+
+
+
+- 어떠한 값을 넣을 때는 문자열로 넣는다. 
+
+  ```html
+  <h1>Hello World</h1>
+  <script>
+      var header = document.querySelector("h1"); 
+      header.style.height = "10px";
+  </script>
+  ```
+
+- 스타일 내에서는 `_` , `$` 두개의 기호만 사용가능하기 때문에 - 뒤에 있는 것을 대문자로 변환해서 넣어주어야한다. 
+
+<img src="images/image-20200526172441544.png" alt="image-20200526172441544" style="zoom:50%;" />
+
+
+
+
+
+## 10.9 문서 객체 제거 
+
+
+
+- 부모객체에서 자식의 객체를 제거. 
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  </head>
+  <body>
+  	<h1>Hello World</h1>
+  	<script>
+  		var header = document.querySelector("h1"); 
+  		var body = document.body; 
+  		
+  		//body.removeChild(header);
+  		header.parentNode.removeChild(header) // 많이 사용한다. 
+  	</script>
+  </body>
+  </html> 
+  ```
+
+
+
+
+
+## 10.9+ 문서 객체 이동하기 
+
+
+
+- 이동을 원하는 부모 객체를 선택한 이후에 `appendChild` 를 붙여서 사용 
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<div id = "first-div">
+		<h1> Hello World</h1>
+	</div>
+	<hr />
+	
+	<div id = "second-div">
+	
+	</div>
+	
+	<script>
+		var firstDiv = document.getElementById("first-div"); 
+		var secondDiv =document.getElementById("second-div")
+		var header = document.querySelector("h1")
+		
+		secondDiv.appendChild(header); 
+		 
+	</script>
+</body>
+</html> 
+```
+
+<img src="images/image-20200526173154620.png" alt="image-20200526173154620" style="zoom:67%;" />
+
+
+
+## 10.10 조금 더 나아가기 
+
+
+
+### 현재 시간 표시 
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<h1 id ="clock"></h1>
+	<script>
+		var clock = document.getElementById("clock"); 
+		clock.innerHTML = (new Date().toString())
+        setInterval(function(){  // 1초 뒤부터 시작해서 화면에 초반에 아무것도 안보이기 때문에 상단에 한번 더 적어줘야한다
+			clock.innerHTML = (new Date().toString())
+		},1000*1)
+	</script>
+</body>
+</html> 
+```
+
+![image-20200526181228617](images/image-20200526181228617.png)
+
+
+
+### 지구와 달의 공전 표현 
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<h1 id="sun">@</h1>
+	<h1 id="earth">O</h1>
+	<h1 id="moon">*</h1>
+	
+	<script>
+		var sun = document.getElementById("sun"); 
+		var earth = document.getElementById("earth");
+		var moon = document.getElementById("moon")
+		
+		var sunX = 250; 
+		var sunY = 250; 
+		
+		
+		sun.style.position = "absolute" // 절대 좌표계 사용 
+		sun.style.left = sunX + "px"; 
+		sun.style.top = sunY + "px"; 
+		
+		
+		
+		earth.style.position = "absolute" 
+		moon.style.position = "absolute"
+		
+		var earthAngle = 0 ; 
+		var moonAngle = 0; 
+		
+		
+		setInterval(function(){
+			var earthX = sunX + Math.cos(earthAngle) * 150; //150 은 지구 크기
+			var earthY = sunY +  Math.sin(earthAngle) * 150
+			var moonX = earthX + Math.cos(moonAngle) * 30 // 30 은 달 크기 
+			var moonY = earthY + Math.sin(moonAngle) * 30
+			
+			earth.style.left = earthX + "px" 
+			earth.style.top = earthY + "px" 
+			moon.style.left = moonX + "px" 
+			moon.style.top = moonY + "px"
+			
+			earthAngle += 0.1 ; 
+			moonAngle += 0.3 ;
+			
+		}, 1000/30); // 1초에 30분씩 실행  
+	</script>
+</body>
+</html> 
+```
+
+
+
+<img src="images/image-20200526182205418.png" alt="image-20200526182205418" style="zoom:50%;" />    ------<img src="images/image-20200526182231794.png" alt="image-20200526182231794" style="zoom:50%;" />
+
+
+
+
+
+
+
+### 10.10.3 문서 객체와 객체지향을 사용한 움직임 구현 
+
+ ```html
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<!--보조함수-->
+	<script>
+	
+		// Math.random()  :  0<= x <1.0 
+		// Math.random()* limit : 0<= x < limit
+		// Math.floor(Math.random() * limit)  // 정수 범위 
+		
+		
+		// 랜덤한 정수를 생성 
+		function nextRandomInteger(limit){
+			return Math.floor(Math.random() * limit); 	
+		}
+		
+		// 랜덤한 알파벳을 리턴하는 함수 
+		var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
+		function randomAlphabet(){
+			return alphabet.charAt(nextRandomInteger(alphabet.length)) ;
+		}
+		
+		// 양수와 음수로 랜덤한 속도를 생성하는 함수 
+		function randomSpeed(maxSpeed){
+			return Math.random() * maxSpeed - maxSpeed/2; 
+		}
+	</script>
+	
+	 <!--생성자 함수-->
+	<script>
+		// MovingText의 생성자 함수 
+		var canvasWidth = 700
+		var canvasHeight = 400
+		
+		function MovingText(){ 
+			// 위치와 속도 속성 
+			this.x = nextRandomInteger(canvasWidth); 
+			this.y = nextRandomInteger(canvasHeight); 
+			this.vx = randomSpeed(10) ; 
+			this.vy = randomSpeed(10); 
+			this.ax = 0; 
+			this.ay = 0; 
+			
+			// 문서 객체를 생성 
+			this.body = document.createElement('h1')
+			this.body.innerHTML = randomAlphabet(); 
+			this.body.style.position = 'absolute'
+			
+			// 문서 객체를 document.body 에 추가한다
+			document.body.appendChild(this.body); 
+		}
+		
+		MovingText.prototype.move = function () {
+			// 범위 검사 
+			if (this.x <0 || this.x > canvasWidth) this.vx *= -1 ;
+			if (this.y <0 || this.y > canvasHeight) this.vy *= -1
+			// 이동 
+			this.vx += this.ax; 
+			this.vy += this.ay; 
+			this.x += this.vx; 
+			this.y += this.vy; 
+			
+			// 화면에 이동 표시 
+			this.body.style.left = this.x + 'px' ;
+			this.body.style.top = this.y + 'px'; 
+			
+		}
+	</script>
+	
+	<!--프로세스 부분-->
+	<script>
+		var movingTexts = []; 
+		// 배열에 MovingText 객체 100개를 생성 
+		for(var i=0; i<100; i++){
+			movingTexts.push(new MovingText()); 
+		}
+		
+		setInterval(function(){
+			for(var i in movingTexts){
+				movingTexts[i].move(); 
+			}
+		}, 1000/30)
+	</script>
+</body>
+</html> 
+ ```
+
+<img src="images/image-20200526183752125.png" alt="image-20200526183752125" style="zoom:67%;" />
+
+
+
+
+
+# 11강 이벤트 
+
+
+
+### 1. 고전 이벤트 모델
+
+- `on` 으로 시작하는 속성이 이벤트 - 함수를 저장한다 ( 이벤트 핸들러 == 이벤트 리스너) . 
+
+```html
+<body>
+	<h1 id="header">Hello World</h1>
+	<script>
+		var header = document.getElementById("header") ; 
+		header.onclick = function(){
+			alert("안녕하세요"); 
+		}
+	</script>
+</body>
+```
+
+- 누가 이벤트를 발생시켰는지는 `this` 를 통해서 알 수 있다. 
+- event 는 이벤트와 관련된 추가적인 정보를 가지고 있는 녀석 .
+
+```html
+<body>
+	<h1 id="header">Hello World</h1>
+	<script>
+		for (var i=0; <10; i++){
+            var header = document.createElement("h1") 
+            header.innerHTML = "Hello World"
+            header.onclick = function (event){
+                this.style.color = "red"
+            }
+            document.body.appendChild(header); 
+        }
+	</script>
+</body>
+```
+
+<img src="images/image-20200526184333842.png" alt="image-20200526184333842" style="zoom:50%;" />
+
+- 기본적으로 발생하는 이벤트를 막을 수도 있다. 
+
+```html
+<body>
+	<h1 id="header">Hello World</h1>
+	<a href="http://naver.com">Default Event</a>
+	<script>
+		var anchor = document.querySelector('a') 
+		anchor.onclick = function(){
+			return false; 
+		}
+	</script>
+</body>
+```
+
+위의 코드는 a 태그를 클릭해도, 페이지가 이동하지 않도록 `return false` 를 사용하여 이벤트 처리를 막은 코드이다. 
+
+
+
+- 이벤트 전달
+
+  같이 어떤 이벤트가 일어날 수 있는 상황에서는 모두 이벤트가 발생한다. 이러한 상황을 막기 위해서는 `event.stopPropagation()` 을 사용하면 막을 수 있다. 
+
+  ```html
+  <head>
+  	<style>
+  		*{
+  			border : 3px solid black
+  		}
+  	</style>
+  </head>
+  <body>
+  	<div id='outer'>
+  		<div id='inner'>
+  			<h1 id='header'> Hello World</h1>
+  		</div>
+  	</div>
+  	
+  	<script>
+  		document.getElementById('outer').onclick = function (event){
+  			this.style.backgroundColor = 'red'
+  		}
+  		document.getElementById('inner').onclick = function (event){
+  			this.style.backgroundColor = 'yellow'
+  		}
+  		document.getElementById('header').onclick = function (event){
+  			this.style.backgroundColor = 'green'
+  		}
+  		
+  	</script>
+  </body>
+  ```
+
+  ![image-20200526185424003](images/image-20200526185424003.png)
+
+  ​																											▼
+
+  ```html
+  <head>
+  	<style>
+  		*{
+  			border : 3px solid black
+  		}
+  	</style>
+  </head>
+  <body>
+  	<div id='outer'>
+  		<div id='inner'>
+  			<h1 id='header'> Hello World</h1>
+  		</div>
+  	</div>
+  	
+  	<script>
+  		document.getElementById('outer').onclick = function (event){
+  			event.stopPropagation()
+  			this.style.backgroundColor = 'red'
+  		}
+  		document.getElementById('inner').onclick = function (event){
+  			event.stopPropagation()
+  			this.style.backgroundColor = 'yellow'
+  		}
+  		document.getElementById('header').onclick = function (event){
+  			event.stopPropagation()
+  			this.style.backgroundColor = 'green'
+  		}
+  		
+  	</script>
+  </body>
+  ```
+
+  ![image-20200526185521055](images/image-20200526185521055.png)
+
+
+
+
+
+### 2. 인라인 이벤트 모델 
+
+```html
+<body>
+	<h1 onclick="alert('경고!')">안녕</h1>
+</body>
+```
+
+- 여러개를 이어서 사용할 경우에는 `;` 을 사용하여 나열하면 된다. 
+
+  
+
+```html
+<body>
+    <a href="http://naver.com" onclick = "return false"> Hello </a>
+</body>
+```
+
+
+
+```html
+<body onclick="this.style.backgroundColor = 'red'">
+    <a href="http://naver.com" onclick = "event.stopPropagation(); return false;"> Hello </a>
+</body>
+```
+
+
+
+### 3. 인터넷 익스플로러 이벤트 모델 (생략)
+
+### 4. 표준 이벤트 모델 
+
+- 현재 표준으로 지정되어있는 모델들. 
+- 구버전 익스플로러를 사용하는 경우는 주로 사용 x 
+
+
+
+- `addEventListener` 을 사용 
+
+  여러개의 리스너들을 연결해서 사용할 수 있다. 
+
+  ```html
+  <body>
+  	<h1>Hello</h1>
+  	<script>
+  		var header = document.querySelector('h1') ;
+  		header.addEventListener("click", function(){
+  			alert("경고!");
+  		});
+  		header.addEventListener("click", function(){
+  			alert("경고!");
+  		});
+  		header.addEventListener("click", function(){
+  			alert("경고!");
+  		});
+  		header.addEventListener("click", function(){
+  			alert("경고!");
+  		});
+  		
+  	</script>
+  </body>
+  ```
+
+
+
+- 이벤트 리스너 제거 ` removeEventListener` 을 이용해서 제거 , 이 때 함수에 대한 이름을 있어야 제거할 수 있다. 
+
+```html
+<script>
+	var header = document.querySelector('h1'); 
+    var listener = function () { alert('경고') }
+    
+    header.addEventListener("click", listener); 
+    header.removeEventListener("click", listener); 
+</script>
+```
+
+
+
+
+
+- 기본 이벤트 제거는 `preventDefault()` 를 사용해서 제거 
+
+  ```html
+  <body>
+  	<a href="http://naver.com"> hello </a>
+  	<script>
+  		var header = document.querySelector('a') ;
+  		header.addEventListener("click", function(event){
+  			event.stopPropagation();
+  			event.preventDefault(); 
+  		})
+  	</script>
+  </body>
+  ```
+
+  
+
+
+
+# 12강 예외 처리 
+
+
+
+### 12.1 구문 오류 
+
+- 실행 전에 아예 발생해버리는 것. 
+
+
+
+### 12.2 예외 처리 
+
+- 실행 후에 발생하는 오류는 예외 또는 런타임 에러 라고 부른다. 
+
+
+
+### 12.3 그 이외의 예외 처리
+
+```html
+<body>
+	<script>
+		var input = prompt("숫자를 입력해주세요", "숫자"); 
+		var numberInput = Number(input); 
+		
+		var array= [
+		           function () { alert("0번째 함수입니다")},
+		           function () { alert("1번째 함수입니다")},
+		           function () { alert("2번째 함수입니다")}
+		]; 
+		
+		array[numberInput](); 
+	</script>
+</body>
+```
+
+- 위의 코드는 배열을 넘어가는 값을 입력하거나, 숫자로 변환 불가능한 값을 입력할 경우 우리가 조치할 수 없는 예외가 발생한다. 
+- 위와 같은 에러를 해결하는 방법은 2가지 
+- 
+
+#### **기본 예외 처리**
+
+- 조건문을 사용하여 예외 처리 
+
+```html
+<body>
+	<script>
+		var input = prompt("숫자를 입력해주세요", "숫자"); 
+		var numberInput = Number(input); 
+		
+		var array= [
+		           function () { alert("0번째 함수입니다")},
+		           function () { alert("1번째 함수입니다")},
+		           function () { alert("2번째 함수입니다")}
+		]; 
+		
+        if( ({}).toString.apply(array[numberInput]) === "[object Function]"){
+            // 존재가 있을 때 
+			array[numberInput](); 
+        }else {
+            // undefined 일 때
+            alert('0과 2사이의 값을 입력해주세요')
+        }
+	</script>
+</body>
+```
+
+
+
+#### 고급 예외 처리
+
+- `try - catch ` 문을 사용하여 예외를 처리 
+
+  - 예외를 정확하게 알지 못해도 처리를 할 수 있다. 
+  - `try` 부분에 예외가 발생할 가능성이 있는 코드를 넣는다. 
+  - `catch` 부분에는 예외가 발생할 경우 실행하는 코드 
+  - `finally` 는 `try` 를 실행하던, `catch` 를 실행하던 무조건 실행하는 코드 
+
+  ```html
+  <body>
+  	<script>
+  		var input = prompt("숫자를 입력해주세요", "숫자"); 
+  		var numberInput = Number(input); 
+  		
+  		var array= [
+  		           function () { alert("0번째 함수입니다")},
+  		           function () { alert("1번째 함수입니다")},
+  		           function () { alert("2번째 함수입니다")}
+  		]; 
+  		
+          try {
+              array[numberInput](); 
+          }catch(exception){
+              console.log(exception);
+              console.log(exception.name);
+              console.log(exception.message);
+              console.log(exception.description);
+              alert('0과 2사이의 값을 입력해주세요')
+          }finally{
+        		      
+          }
+  	</script>
+  </body>
+  ```
+
+  
+
+- `finally` 구문 사용 예시 
+
+  ```html 
+  <body>
+      <script>
+          function test(){
+              try{
+                  alert('a 위치 ')
+                  return; 
+                  alert('b 위치')
+              }catch(exception){
+                  alert('c 위치')
+              }finally{
+                  alert('d 위치')
+              }
+          }
+          test();
+      </script>
+  </body>
+  ```
+
+  위의 코드를 실행하면 `a위치 -> d위치` 만 나오는 것을 확인할 수 있다. 
+
+
+
+## 12.6 예외 강제 발생 
+
+- `throw` 키워드를 사용하여 예외 강제 발생 
+
+  ```html
+  <body>
+      <script>
+  		alert('안녕하세요') ;
+  		throw 'Test Error';
+  		alert('안녕하셍'); 
+      </script>
+  </body>
+  ```
+
+
+
+- 예외를 반드시 발생시켜야 하는 경우에 사용 
+
+  ```html
+  <body>
+      <script>
+  		function Test(){
+              
+          }
+          Test.prototype.method = function(){
+              throw "Not Implemented"
+          }
+          
+          (new Test()).method()  // 이처럼 해야할 일을 나중에 미루거나 할때 예외를 발생시켜 상기시키는 용도로도 사용
+      </script>
+  </body>
+  ```
+
+  
+
+
+
+### 외부 JS 파일을 가져오는 방법 
+
+
+
+- 같은 폴더에 있을 경우 그냥 파일명만 입력하거나 `./` 을 입력하고 파일명을 입력.  
+
+<img src="images/image-20200526194354551.png" alt="image-20200526194354551" style="zoom:67%;" />
+
+
+
+
+
+# PART2 - jQuery 
 
