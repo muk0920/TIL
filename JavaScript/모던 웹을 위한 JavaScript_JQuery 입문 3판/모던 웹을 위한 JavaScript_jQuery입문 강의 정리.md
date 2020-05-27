@@ -1,5 +1,3 @@
-
-
 # 목차 
 
 [TOC]
@@ -3050,5 +3048,1790 @@
 
 
 
+
+
 # PART2 - jQuery 
 
+
+
+사이트에 접속  www.jquery.com
+
+- compressed 버전 : (들여쓰기 등이 모두 안되어 압축되어있는 버전)
+- uncompressed 버전 : 들여쓰기 등이 모두 적용되어있는 버전 
+
+
+
+**사용방법** 
+
+- 다운받아서 사용하는 방법
+  - 파일을 다운받아서 사용할 경우 자동완성이 이루어진다. 
+- 웹 사이트 경로를 적어서 사용하는 방법 (CDN)
+  - https://code.jquery.com 에서 경로 확인 가능 
+  - 웹 사이트 경로를 이용할 경우 코드 자동완성이 이루어지지 않는다. 
+
+<img src="images/image-20200527082356828.png" alt="image-20200527082356828" style="zoom:80%;" />
+
+
+
+
+
+
+
+### jQuery 객체 
+
+
+
+- **css 선택자** : 문서 객체를 선택 
+
+  ```html
+  <body>
+  	<h1></h1>
+      <script>
+  		// css 선택자 : 문서 객체를 선택 
+  		$("h1").css("color","red")
+  		$("h1").css("background-color","orange"); 
+  		$("h1").css("backgroundColor","orange"); 
+  		$("h1").html("안녕하세요");
+      </script>
+  </body>
+  ```
+
+  <img src="images/image-20200527084639189.png" alt="image-20200527084639189" style="zoom:80%;" />
+
+- **문서 객체** : 문서 객체를 선택 
+
+  ```html
+  <body>
+  	<h1></h1>
+      <script>
+  		// css 선택자 
+  		$("h1").css("color","red")
+  		$("h1").css("background-color","orange"); 
+  		$("h1").css("backgroundColor","orange"); 
+  		$("h1").html("안녕하세요");
+  		
+  		// 문서객체 : 문서 객체를 선택  
+  		var header = document.querySelector("h1")
+  		$(header).css("color","blue")
+  		
+      </script>
+  </body>
+  ```
+
+  <img src="images/image-20200527084746818.png" alt="image-20200527084746818" style="zoom:80%;" />
+
+- **태그 형태의 문자열** : 문서 객체를 생성 
+
+  ```html
+  <body>
+  	<h1></h1>
+      <script>
+  		// css 선택자 
+  		$("h1").css("color","red")
+  		$("h1").css("background-color","orange"); 
+  		$("h1").css("backgroundColor","orange"); 
+  		$("h1").html("안녕하세요");
+  		
+  		// 문서객체 : 문서 객체를 선택  
+  		var header = document.querySelector("h1")
+  		$(header).css("color","blue")
+  		
+  		// 태그 형태의 문자열 : 문서 객체를 생성 
+  		$("<h1></h1>")
+  			.appendTo("body")
+  			.css("color","red")	
+  			.html("Hello World")	
+      </script>
+  </body>
+  ```
+
+  <img src="images/image-20200527084924441.png" alt="image-20200527084924441" style="zoom:80%;" />
+
+
+
+# 15강 문서 객체 조작 
+
+
+
+- `$().css` 
+
+- `$().attr`  : 속성을 조작 
+
+- `$().html`  : html 을 조작 
+
+- `$().text`  : text 를 조작 
+
+  
+
+1. **Setter** : 값을 지정하는 형태 - jQuery 객체를 return 한다. 
+
+   -  `A.(문자열, 문자열)` 
+   -  `B.(객체)` 
+   - 참고. 함수로 값을 입력 ( 이 때 매개변수로 index 값이 들어온다 )
+
+   <img src="images/image-20200527085557349.png" alt="image-20200527085557349" style="zoom:80%;" />
+
+   
+
+2. **Getter** : 매개변수를 하나 생략해서 사용한다.  - 문자열을 리턴 
+
+   - 해당하는 태그가 여러 개 있을 경우 가장 첫번째 만나는 것을 가져온다. 
+   - `$().text()` 함수는 처음 만나는 것을 출력하는 것이 아닌 전부를 출력한다. 
+
+
+
+```html
+	<h1>Hello World </h1>
+    <script>
+		// 1. Setter - jQuery 객체 
+    	$("h1").css("color","red")
+		
+    	// 2. Getter - 매개변수를 하나 생략해서 사용한다 - 문자열을 리턴 
+    	var value = $('h1').css("color")
+    	alert(value); 
+		
+    </script>
+```
+
+<img src="images/image-20200527085329970.png" alt="image-20200527085329970" style="zoom:67%;" />
+
+
+
+
+
+## 15.2 클래스 속성 추가 
+
+
+
+- `addClass` 
+
+```html
+<head>
+	<meta charset = "utf-8">
+	<script src="jquery-3.5.1.js"></script>
+	<style>
+		.header { text-align : center ;}
+		.red-text { color : red }
+	</style>
+</head>
+<body>
+	<h1>Hello World </h1>
+    <script>
+		$('h1').addClass("red-text"); 
+		$('h1').addClass("header"); 
+    </script>
+</body>
+```
+
+![image-20200527095241943](images/image-20200527095241943.png)
+
+
+
+## 15.3 클래스 속성 제거 
+
+
+
+- `removeClass`  
+
+```html
+<head>
+	<meta charset = "utf-8">
+	<script src="jquery-3.5.1.js"></script>
+	<style>
+		.header { text-align : center ;}
+		.red-text { color : red }
+	</style>
+</head>
+<body>
+	<h1>Hello World </h1>
+    <script>
+		$('h1').addClass("red-text"); 
+		$('h1').addClass("header"); 
+		
+		setTimeout(function(){
+			$('h1').removeClass('red-text')
+			$('h1').removeClass('header')
+		},1000*2)
+    </script>
+</body>
+```
+
+
+
+- `hasClass` : 내부에 그 클래스가 있는지 없는지 알 수 있다. 
+
+  - boolean 일 경우 화면에 출력되지 않는다. 
+
+  ```html
+   <head>
+  	<meta charset = "utf-8">
+  	<script src="jquery-3.5.1.js"></script>
+  	<style>
+  		.header { text-align : center ;}
+  		.red-text { color : red }
+  	</style>
+  </head>
+  <body>
+  	<h1>Hello World </h1>
+      <script>
+  		$('h1').addClass("red-text"); 
+  		$('h1').addClass("header"); 
+  		
+  		var outputA = $('h1').hasClass("header")
+  		var outputB = $('h2').hasClass('contents'); 
+  		
+  		$("<h2></h2>").html(outputA.toString()).appendTo("body")
+  		$("<h2></h2>").html(outputB.toString()).appendTo("body")
+  		$("<h2></h2>").html(outputB).appendTo("body")
+  		// boolean 일 경우 화면에 출력되지 않는다. 
+  		
+  		setTimeout(function(){
+  			$('h1').removeClass('red-text')
+  			$('h1').removeClass('header')
+  		},1000*2)
+      </script>
+  </body>
+  ```
+
+  <img src="images/image-20200527095624706.png" alt="image-20200527095624706" style="zoom:80%;" />
+
+- `removeAttr()`  
+
+- `toggleClass` 
+
+  ```html
+  <body>
+      <h1>Hello</h1>
+      <script>
+      	$('h1').toggleClass('a'); // 생성 
+          $('h1').toggleClass('a'); // 제거
+      </script>
+  </body>
+  ```
+
+
+
+- `remove()`  
+
+  ```html
+  <script>
+  	$('h1').remove()   // h1 태그 제거.
+  </script>
+  ```
+
+  
+
+
+
+## 15.14 문서 객체 삽입 
+
+
+
+<img src="images/image-20200527100032010.png" alt="image-20200527100032010" style="zoom: 80%;" />
+
+<img src="images/image-20200527100107449.png" alt="image-20200527100107449" style="zoom: 67%;" />
+
+<img src="images/image-20200527100050184.png" alt="image-20200527100050184" style="zoom:80%;" />
+
+
+
+```html
+<body>
+	<h1>Hello</h1>
+    <script>
+		$('<h1></h1>').html("Hello Append").appendTo("body");
+		$('<h1></h1>').html("Hello Prepend").prependTo("body");
+		$('<h1></h1>').html("Hello After").insertAfter("body");
+		$('<h1></h1>').html("Hello Before").insertBefore("body");
+        
+        // 위쪽의 방법을 더 선호 
+        
+        // $("body").append("<h1></h1>")
+		// $("body").prepend("<h1></h1>")
+		// $("body").after("<h1></h1>")
+		// $("body").before("<h1></h1>")
+    </script>
+</body>
+```
+
+<img src="images/image-20200527100252562.png" alt="image-20200527100252562" style="zoom:80%;" />![image-20200527100341222](images/image-20200527100341222.png)
+
+<img src="images/image-20200527100345126.png" alt="image-20200527100345126" style="zoom:80%;" />
+
+
+
+
+
+## 15.15 문서 객체 이동 
+
+
+
+- ```html
+  <body>
+  	<h1>Hello</h1>
+  	<h2>Hello</h2>
+  	<h3>Hello</h3>
+  	<script>
+  		$('h1').appendTo('body')
+  	</script>
+  </body>
+  ```
+
+- <img src="images/image-20200527100656895.png" alt="image-20200527100656895" style="zoom:67%;" />
+
+
+
+
+
+# 16강 이벤트 
+
+
+
+- `click()` 의 3가지 형태 
+  1. 클릭 시 이벤트 자동으로 발생 
+  2. 매개변수로 이벤트 핸들러를 넣어줘야한다. 
+  3. 첫번째 매개변수로 이벤트 데이터를 넣고, 두번째 매개변수로 핸들러를 넣어준다. 
+
+```html
+<body>
+	<h1>hello</h1>
+	<script>
+		$('h1').click(function(event){
+			alert('안녕하세요-a')
+		})
+		$('h1').click(100, function(event){
+			alert('안녕하세요-b')
+		})
+	</script>
+</body>
+```
+
+
+
+### 이벤트 객체 
+
+- 이벤트와 관련된 정보가 들어있는 녀석 
+
+
+
+- `event.currentTarget` : 이벤트를 발생시킨 객체를 의미 
+  - `this == event.currentTarget` 
+
+```html
+<body>
+	<h1>hello</h1>
+	<script>
+		$('h1').click(function(event){
+			alert(event.currentTarget)
+			$(event.currentTarget).html("click");
+            $(this).css("color",'red')
+		})
+	</script>
+</body>
+```
+
+
+
+- `event.data` : 이벤트의 데이터를 출력 
+
+```html
+<body>
+	<h1>hello</h1>
+	<script>
+		$('h1').click(function(event){
+			alert(event.currentTarget)
+			$(event.currentTarget).html("click");
+		})
+	</script>
+</body>
+```
+
+
+
+- `event.preventDefault()`  
+
+```html
+<body>
+	<a href="http://naver.com">네이버 </a>
+	<script>
+		$('a').click(function(event){
+			alert(event.currentTarget)
+			$(event.currentTarget).html("click");
+		})
+		
+		$('a').click(function(event){
+			event.preventDefault(); 
+		})
+	</script>
+</body>
+```
+
+
+
+- `event.stopPropagation()` : 이벤트가 뒤로 전달되는 것을 방지. 
+
+  ```html
+  <body>
+  	<a href="http://naver.com">네이버 </a>
+  	<script>		
+  		$('a').click(function(event){
+  			event.preventDefault() ;
+  			event.stopPropagation() 
+  		});
+  		$("body").click(function(){
+  			$(this).css("background-color","orange")
+  		});
+  	</script>
+  </body>
+  ```
+
+  ​																				▼ 
+
+  ```html
+  <script>	
+      // 위 코드와 동일한 기능 수행 
+      $('a').click(function(event){
+          return false; // preventDefalut + stopPropagation 
+      });
+  
+  
+      $("body").click(function(){
+          $(this).css("background-color","orange")
+      });
+  </script>
+  ```
+
+
+
+- `$().on()` 
+
+  - 첫번째 매개변수 - 문자열로   두번째 매개변수 - 핸들러 함수 
+
+    ```html
+    <body>
+    	<h1>hello</h1>
+    	<script>		
+    		$('h1').on("click", 100, function(event){
+    			$(this).html("click")
+    		})
+    		
+    		$('h1').on({
+    			click : function(){
+    				$(this).html("click")
+    			}, 
+    			dblclick:function(){
+    				$(this).html("dblclick")
+    			},
+    			mouseenter : function(){
+    				$(this).html("mouseenter")
+    			}
+    		})
+    	</script>
+    </body>
+    ```
+
+  - 
+
+    ```html
+    <script>
+    	$('body').on('click', 'h1', function(){
+            console.log(this);
+            $(this).html('click');
+            $("<h1></h1>").html("hello").appendTo("body")
+        })
+    </script>
+    ```
+
+    body 태그를 클릭하면, 클릭한 것이 h1 태그일 경우 안의 코드를 실행. 
+
+    <img src="images/image-20200527103052425.png" alt="image-20200527103052425" style="zoom:80%;" />
+
+# 17강 효과 
+
+
+
+
+
+## 17.1 기본 시각효과 
+
+
+
+![image-20200527103240745](images/image-20200527103240745.png)
+
+
+
+```html
+<body>
+	<button> Toggle SHow </button>
+	<div class ="page">
+		<h1>한글 lorem ipsum </h1>
+		<p>
+		이 헌법시행 당시의 법령과 조약은 이 헌법에 위배되지 아니하는 한 그 효력을 지속한다. 이 헌법은 1988년 2월 25일부터 시행한다. 다만, 이 헌법을 시행하기 위하여 필요한 법률의 제정·개정과 이 헌법에 의한 대통령 및 국회의원의 선거 기타 이 헌법시행에 관한 준비는 이 헌법시행 전에 할 수 있다.
+
+국회에서 의결된 법률안은 정부에 이송되어 15일 이내에 대통령이 공포한다. 사회적 특수계급의 제도는 인정되지 아니하며, 어떠한 형태로도 이를 창설할 수 없다.
+		</p>
+	</div>
+	<script>
+		$('button').click(function(){
+			$('div.page').toggle('slow');
+		})
+	</script>
+</body>
+```
+
+
+
+## 17.2 사용자 정의 효과 
+
+
+
+![image-20200527103647341](images/image-20200527103647341.png)
+
+
+
+
+
+```html
+<body>
+	<div></div>
+	<script>
+		$('div').click(function(){
+			$(this).animate({
+				width:"+=100",
+				height:"+=100"
+			}, 1.5*1000)
+		})
+	</script>
+</body>
+```
+
+
+
+ animate 는 동시에 실행되는 것이 아니라 대기열에 들어간 이후에 차례로 실행 
+
+<img src="images/image-20200527104013545.png" alt="image-20200527104013545" style="zoom:67%;" />
+
+```html
+<head>
+	<meta charset = "utf-8">
+	<script src="jquery-3.5.1.js"></script>
+	<style>
+		div{ width : 100px; height : 100px; background-color : orange; position : relative}
+	</style>
+</head>
+<body>
+	<div></div>
+	<script>
+		$('div').click(function(){
+            $(this).clearQueue();
+			$(this).animate({
+				left : '+=60'
+			}, 2000).animate({
+				width:'+=60'
+			},2000).animate({
+				height:'+=60'
+			},2000)
+		})
+	</script>
+</body>
+```
+
+
+
+- `$().clearQueue()` : 현재 실행되는 녀석을 제외한 녀석들을 제거하는 것. 
+
+- `$().stop()` : 애니메이션을 중지하는 것. 
+
+  - 첫번째 매개변수는 `clearQueue` ,  `jumpToEnd` - 애니메이션을 중간에 중단할 것인지. 
+
+    ```html
+    <head>
+    	<meta charset = "utf-8">
+    	<script src="jquery-3.5.1.js"></script>
+    	<style>
+    		div{ width : 100px; height : 100px; background-color : orange; position : relative}
+    	</style>
+    </head>
+    <body>
+    	<div></div>
+    	<script>
+    		$('div').click(function(){
+    			$(this).stop(true, true) ; 
+    			// clearQueue : true , jumpToEnd : true
+    			$(this).animate({
+    				left : '+=60',
+    				width : '+=60',
+    				height : '+=60'
+    			})
+    		})
+    	</script>
+    </body>
+    ```
+
+
+
+- `$().delay()` : 애니메이션 사이에 대기시간을 부여 
+
+```html
+<body>
+	<div></div>
+	<script>
+		$('div').click(function(){
+			$(this)
+				.animate({
+					left : "+=100"
+				},1000)
+				.delay(1000)
+				.animate({
+					left : "+=100"
+				},1000)
+		})
+	</script>
+</body>
+```
+
+
+
+
+
+- `$(document).ready()`	: 이벤트를 연결하는 것. 
+
+  ```html
+  <script>
+  	document.addEventListener("DOMContentLoaded", function(){
+          
+      }) 	// DOM이 모두 로드됐을 때 불러오는 부분. 
+      
+      // 아래 부분이 위와 같은 역할 수행 
+      // $(function(){
+      //
+      //})
+      
+  	$(document).ready(function(){
+          
+      })
+  </script>
+  ```
+
+  ```html
+  <head>
+  	<meta charset = "utf-8">
+  	<script src="jquery-3.5.1.js"></script>
+  	<script>
+  		document.addEventListener("DOMContentLoaded", function(){
+  			console.log("ready")
+  		})
+  		$(function(){
+  			console.log("$()")
+  		})
+  	</script>
+  </head>
+  ```
+
+  ![image-20200527105208335](images/image-20200527105208335.png)
+
+
+
+# 14강 문서 객체 탐색 
+
+
+
+- ```html
+  <head>
+  	<meta charset = "utf-8">
+  	<script src="jquery-3.5.1.js"></script>
+  	<script>
+  		$(function(){
+  			for(var i =0; i<3; i++){
+  				$("<div></div>")
+  					.append("<h1>Hello</h1>")
+  					.append("<p> Lorem ipsum dolor sit amet, ... </p>")
+  					.appendTo('body')
+  					.click(function(){
+  						$('p').css('color','red')
+  					})
+  				}	
+  			})
+  	</script>
+  </head>
+  ```
+
+  <img src="images/image-20200527105513650.png" alt="image-20200527105513650" style="zoom:67%;" />
+
+  p 태그를 클릭할 경우 자기 자신 뿐만 아니라 모든 p 태그가 변한다 .
+
+  이를 제한하는 방법이 있다. 
+
+  - `$(this).find()` 
+
+  - `$('p',this)` 
+
+    ```html
+    <head>
+    	<meta charset = "utf-8">
+    	<script src="jquery-3.5.1.js"></script>
+    	<script>
+    		$(function(){
+    			for(var i =0; i<3; i++){
+    				$("<div></div>")
+    					.append("<h1>Hello</h1>")
+    					.append("<p> Lorem ipsum dolor sit amet, ... </p>")
+    					.appendTo('body')
+    					.click(function(){
+    						$(this).find('p').css('color','red');
+    						//$('p',this).css('color','red')
+    					})
+    				}	
+    			})
+    	</script>
+    </head>
+    ```
+
+    <img src="images/image-20200527105635509.png" alt="image-20200527105635509" style="zoom:50%;" />
+
+  
+
+
+
+문서 객체 모델에 변화가 있다 = Java Script 
+
+문서 객체 모델에 변화가 없다 = CSS
+
+
+
+
+
+### 이미지 슬라이더 
+
+- 화면에 보이는 부분만 보이게하고 , 나머지는 안보이게 하는 방식으로 슬라이드 진행 
+
+![image-20200527111731148](images/image-20200527111731148.png)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="jquery-3.2.1.js"></script>
+    <style>
+        * { margin:0; padding:0 }
+        li { list-style:none; }
+    </style>
+    <script>
+        $(document).ready(function () {
+            var length = $(".viewport li").length
+            var width = 980
+            var height = 380
+
+            $(".viewport").css({ width: width, height: height, overflow: "hidden" })
+            $(".viewport ul").css({ width: width * length })
+            $(".viewport li").css({ width: width, height: height, float: "left" })
+            
+            var moveTo = function (index) {
+                // 매개변수를 보완합니다.
+                index = index || 0
+                index = index % length
+                // 애니메이션으로 이동합니다.
+                $(".viewport ul").animate({
+                    marginLeft: -width * index
+                })
+                // 타이틀을 변경합니다.
+                var title = $($(".viewport li").get(index)).attr("data-title")
+                $("h1").html(title)
+                $("h2").html("0" + (index + 1))
+                currentIndex = index
+            }
+
+            for (var i = 0; i < length; i++) {
+                (function (i) {
+                    $("<button></button>").text(i).click(function () {
+                        moveTo(i)
+                    }).appendTo("body")
+                })(i)
+            }
+
+            var currentIndex = 0
+            setInterval(function () {
+                currentIndex += 1
+                moveTo(currentIndex)
+            }, 1000 * 5)
+            moveTo(0)
+
+            window.moveSlider = moveTo
+        })
+    </script>
+</head>
+<body>
+    <h2 id="index-label"></h2>
+    <h1 id="title-label"></h1>
+    <div class="viewport">
+        <ul>
+            <li data-title="가나다"><a href="#"><img src="a.jpg" /></a></li>
+            <li data-title="라마바"><a href="#"><img src="b.jpg" /></a></li>
+        </ul>
+    </div>
+</body>
+</html>
+```
+
+
+
+이미지를 버튼으로 사용하는 방법 강의 - 73강 확인. 
+
+
+
+### 17.8.1 innerfade 플러그인 
+
+- 플러그인 : 다른사람들이 우리를 위해서 미리 구현해둔 것. 
+
+- http://medienfreunde.com/lab/innerfade/ 에서 파일 다운. 
+
+- ```html
+  <script src="js/jquery.innerfade.js"></script>
+  ```
+
+- ![image-20200527114222047](images/image-20200527114222047.png)
+
+
+
+- 인터넷에 jquery plugin 을 검색해서 다양한 플러그인들을 찾아볼 수 있다. 
+
+
+
+# 20강 jQuery 플러그인 
+
+
+
+- `fn` 이라는 속성에 무언가를 넣게 되면 jQuery 에서 사용할 수 있는 메서드가 된다. 
+
+  ```html
+  <head>
+  	<meta charset = "utf-8">
+  	<script src="jquery-3.5.1.js"></script>
+  	<script>
+  		$.fn.reder = function(){
+  			$(this).css("color",'red'); 
+  		}
+  	</script>
+  		
+  	<script>
+  		$(document).ready(function(){
+  			$('h1').reder(); 
+  		});
+  	</script>
+  </head>
+  <body>
+  	<h1> hello</h1>
+  </body>
+  ```
+
+  <img src="images/image-20200527114643963.png" alt="image-20200527114643963" style="zoom:50%;" />
+
+
+
+# PART3 Ajax 
+
+
+
+# 21강 node.js 기본 
+
+
+
+- node.js 설치방법 
+
+  http://nodejs.org  ( 짝수버전의 최신버전을 설치해라 )
+
+  
+
+- 프롬프트에서 `node` 를 입력하여 바로 실행 
+- `node 파일명` 
+
+
+
+```js
+var output = ''; 
+
+for(var i=0; i<10; i++){
+	console.log(output += '*')
+}
+```
+
+<img src="images/image-20200527115329064.png" alt="image-20200527115329064" style="zoom:80%;" />
+
+
+
+
+
+## 웹 서버 기본 
+
+
+
+- 서버 - 컴퓨터 위의 프로그램 
+  - 중앙에 있는 것 
+  -  PHP / Java / Ruby / Python / C# / 자바스크립트 
+
+
+
+- 클라이언트 - 웹 브라우저 / 애플리케이션 
+  - 제공 받는 것 
+  - 웹 브라우저 - 자바스크립트
+
+
+
+- 클라이언트 -> 서버 : 요청 [request]
+  - 목적이 무엇인지 명확하게 전달해야한다. 
+  - HTTP : 메서드 / URL 
+
+
+
+- 서버 -> 클라이언트 : 응답 [response]
+  - 상태 코드 [Status Code]
+    - **200** OK 
+    - **404** Not Found 
+  - 응답 헤더 
+  - 응답 본문 
+
+![image-20200527115817757](images/image-20200527115817757.png)
+
+
+
+```js
+const http = require("http"); // http 모듈을 읽어들인다.
+
+const server = http.createServer((request, response) =>{
+	// 요청 정보 확인 
+    console.log(request.method)
+    console.log(request.url)
+    console.log()
+   
+    // 응답 방법 
+    response.writeHead(200, {
+        "Content-Type" : "text/html"
+    })
+    response.write("<h1>Hello World </h1>")
+    response.end() 
+})
+
+server.listen(52273, () =>{ 
+	console.log("Server Running at http://127.0.0.1:52273")
+})
+```
+
+![image-20200527120357281](images/image-20200527120357281.png)
+
+
+
+```js
+const http = require("http"); // http 모듈을 읽어들인다.
+
+const server = http.createServer((request, response) =>{
+	// 요청 정보 확인 
+    console.log(request.method)
+    console.log(request.url)
+    console.log()
+   
+    if(request.url === "/hello"){
+    	// 응답 방법 
+        response.writeHead(200, {
+            "Content-Type" : "text/html"
+        })
+        response.write("<meta charset='utf-8' /><h1>안녕하세요 </h1>")
+        response.end() 	
+    }else{
+    	// 응답 방법 
+        response.writeHead(200, {
+            "Content-Type" : "text/html"
+        })
+        response.write("<h1>Hello World </h1>")
+        response.end() 
+    }
+    
+})
+
+server.listen(52273, () =>{ 
+	console.log("Server Running at http://127.0.0.1:52273")
+})
+```
+
+![image-20200527120640385](images/image-20200527120640385.png)
+
+![image-20200527120609331](images/image-20200527120609331.png)
+
+
+
+
+
+## 21.7 서버 생성 및 실행 
+
+- express 모듈 설치 
+
+  ```bash
+  > npm install express@4.14 
+  
+  npm WARN saveError ENOENT: no such file or directory, open 'C:\Users\User\workspace\HtmlExample\WebContent\package.json'
+  npm notice created a lockfile as package-lock.json. You should commit this file.
+  npm WARN enoent ENOENT: no such file or directory, open 'C:\Users\User\workspace\HtmlExample\WebContent\package.json'
+  npm WARN WebContent No description
+  npm WARN WebContent No repository field.
+  npm WARN WebContent No README data
+  npm WARN WebContent No license field.
+  
+  + express@4.14.1
+  added 43 packages from 27 contributors and audited 43 packages in 2.735s
+  found 10 vulnerabilities (4 low, 2 moderate, 4 high)
+    run `npm audit fix` to fix them, or `npm audit` for deta
+  ```
+
+- ```js
+  // 모듈 추출 
+  const express = require('express')
+  const app = express(); 
+  
+  app.get('/', (req, res) =>{
+  	res.send('<h1>hello world</h1>')
+  })
+  app.listen(52273, () => {
+  	console.log('Server Running at http://127.0.0.1:52273')
+  })
+  ```
+
+![image-20200527121059802](images/image-20200527121059802.png)
+
+
+
+
+
+## 21.9 정적 파일 제공 
+
+
+
+예시 ) 
+
+​	public 디렉터리 생성 - 그 안에 test.html 파일 생성 
+
+```html
+<!-- test.html --> 
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title> express Test</title>   
+
+    </head>
+    <body>
+        <h1>
+            Hello World
+        </h1>
+    </body>
+</html>
+```
+
+​	main.js 
+
+```js
+// 모듈 추출 
+const express = require('express')
+const app = express(); 
+
+app.use(express.static('public'))
+
+app.get('/', (req, res) =>{
+	res.send('<h1>hello world 정적파일</h1>')
+})
+app.listen(52273, () => {
+	console.log('Server Running at http://127.0.0.1:52273')
+})
+```
+
+![image-20200527121740196](images/image-20200527121740196.png)
+
+
+
+
+
+## 21.11 응답과 응답 형식 
+
+
+
+#### `/data.html` 
+
+- 데이터를 HTML 형식으로 제공한다. 
+
+```js
+// 모듈 추출 
+const express = require('express')
+const app = express(); 
+
+// 변수 선언 
+var items = [{
+    name : '우유', 
+    price: '2000'
+}, {
+    name : '홍차', 
+    price :'3000'
+}, {
+    name : '커피', 
+    price : '5000'
+}] ; 
+
+app.use(express.static('public'))
+
+app.get('/data.html',(req,res)=>{
+    let output = ''
+    output += '<!DOCTYPE html>'
+    output += '<html>'
+    output += '<head>'
+    output += '     <title>Data HTML </title>'
+    output += '</head>'
+    output += '<body>'
+    items.forEach(function(item){
+        output += '<div>'
+        output += '     <h1>'+item.name + '</h1>'
+        output += '     <h2>'+item.price+ '</h2>'
+        output += '</div>'
+    })
+    output += '</body>'
+    output += '</html>'
+    res.send(output); 
+})
+
+app.listen(52273, () => {
+	console.log('Server Running at http://127.0.0.1:52273')
+})
+```
+
+<img src="images/image-20200527134539613.png" alt="image-20200527134539613" style="zoom:67%;" />
+
+
+
+#### `/data.json` 
+
+- 데이터를 JSON 형식으로 제공한다
+
+  ```js
+  // 모듈 추출 
+  const express = require('express')
+  const app = express(); 
+  
+  // 변수 선언 
+  var items = [{
+      name : '우유', 
+      price: '2000'
+  }, {
+      name : '홍차', 
+      price :'3000'
+  }, {
+      name : '커피', 
+      price : '5000'
+  }] ; 
+  
+  app.use(express.static('public'))
+  
+  app.get('/data.json', (req,res) =>{
+      res.send(items)
+  })
+  
+  app.listen(52273, () => {
+  	console.log('Server Running at http://127.0.0.1:52273')
+  })
+  ```
+
+  ![image-20200527134646840](images/image-20200527134646840.png)
+
+  
+
+#### `/data.xml` 
+
+- 데이터를 XML 형식으로 제공한다. 
+
+- xml 파일임을 명확하게 지정해줘야한다. 
+
+  ```js
+  // 모듈 추출 
+  const express = require('express')
+  const app = express(); 
+  
+  // 변수 선언 
+  var items = [{
+      name : '우유', 
+      price: '2000'
+  }, {
+      name : '홍차', 
+      price :'3000'
+  }, {
+      name : '커피', 
+      price : '5000'
+  }] ; 
+  
+  app.use(express.static('public'))
+  
+  app.get('/data.xml', (req, res)=>{
+      var output = '' ;
+      output += '<?xml version="1.0" encoding="UTF-8" ?>'
+      output += '<products>'
+      items.forEach(function(item){
+          output += '<product>'
+          output += '     <name>' + item.name + '</name>'
+          output += '     <price>'+item.price + '</price>'
+          output += '</product>'
+      })
+      output += '</products>'
+      res.type('text/xml')
+      res.send(output)
+  })
+  
+  app.listen(52273, () => {
+  	console.log('Server Running at http://127.0.0.1:52273')
+  })
+  ```
+
+  
+
+![image-20200527135021258](images/image-20200527135021258.png)
+
+
+
+
+
+#### ajax 사용법 
+
+- `$.ajax` 
+
+  - 매개변수 - url 
+
+  - success (data, textStatus, xhr)
+
+    ```html
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="utf-8" />
+            <title> express Test</title>   
+            <script src = "jquery-3.5.1.js"></script>
+        </head>
+        <body>
+            <h1>Hello World Static File</h1>
+            <script>
+                $.ajax({
+                    url : "/data.html", 
+                    success : function(data, textStatus, xhr){
+                        console.log(data)
+                        console.log(textStatus)
+                    }
+                })
+            </script>
+        </body>
+    </html>
+    ```
+
+    ![image-20200527135230201](images/image-20200527135230201.png)
+
+
+
+- ```html
+  <!DOCTYPE html>
+  <html>
+      <head>
+          <meta charset="utf-8" />
+          <title> express Test</title>   
+          <script src = "jquery-3.5.1.js"></script>
+      </head>
+      <body>
+          <h1>Hello World Static File</h1>
+          <script>
+              $.ajax({
+                  url : "/data.xml", 
+                  success : function (data, textStatus, xhr){
+                      console.log(data); 
+                  }
+              })
+  
+              $.ajax({
+                  url : "/data.json", 
+                  success : function (data, textStatus, xhr){
+                      console.log(data); 
+                  }
+              })
+          </script>
+      </body>
+  </html>
+  ```
+
+<img src="images/image-20200527135428062.png" alt="image-20200527135428062" style="zoom:67%;" />
+
+
+
+### HTML , XML, JSON 데이터를 동적으로 가져와서 화면에 출력 - GET 메서드 
+
+- html 사용
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+      <head>
+          <meta charset="utf-8" />
+          <title> express Test</title>   
+          <script src = "jquery-3.5.1.js"></script>
+      </head>
+      <body>
+          <h1>Hello World Static File</h1>
+          <script>
+              setTimeout(function(){
+                  $.ajax({
+                  url : "/data.html", 
+                  success : function (data, textStatus, xhr){
+                          $('body').html(data); 
+                      }
+                  })
+              },1000)
+              
+          </script>
+      </body>
+  </html>
+  ```
+
+  <img src="images/image-20200527135625615.png" alt="image-20200527135625615" style="zoom:50%;" />                   -                                    <img src="images/image-20200527135611062.png" alt="image-20200527135611062" style="zoom:67%;" />
+
+- 위의 코드를 실행하면 1초 뒤에 html 문서로 화면이 바뀌게 된다.  
+
+
+
+
+
+- xml 사용 
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+      <head>
+          <meta charset="utf-8" />
+          <title> express Test</title>   
+          <script src = "jquery-3.5.1.js"></script>
+      </head>
+      <body>
+          <h1>Hello World Static File</h1>
+          <button id = "hello">데이터 가져오기 </button>
+          <script>
+              $('button').click(function(){
+                  $.ajax({
+                      url : '/data.xml', 
+                      success : function(data, textStatus, xhr){
+                          $(data).find('product').each(function(){
+                              var name = $(this).find('name').text(); 
+                              var price = $(this).find('price').text(); 
+                              
+                              var $header = $('<h1></h1>').text(name + " - " + price + '원')  ;
+                              $('<div></div>').append($header).appendTo("body"); 
+                              console.log(name, price); 
+                          })
+                      }
+                  })
+              });
+             
+              
+          </script>
+      </body>
+  </html>
+  ```
+
+  <img src="images/image-20200527140210364.png" alt="image-20200527140210364" style="zoom:67%;" />
+
+
+
+- json 사용 
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+      <head>
+          <meta charset="utf-8" />
+          <title> express Test</title>   
+          <script src = "jquery-3.5.1.js"></script>
+      </head>
+      <body>
+          <h1>Hello World Static File</h1>
+          <button id = "hello">데이터 가져오기 </button>
+          <script>
+              $.ajax({
+                  url : '/data.json', 
+                  success : function(data, textStatus, xhr){
+                      data.forEach(function(item){
+                          var $header = $("<h1></h1>")
+                              .text(item.name + ' - ' + item.price + '원')
+                          $("<div></div>").append($header).appendTo('body')
+                      })
+                  }
+              })
+             
+              
+          </script>
+      </body>
+  </html>
+  ```
+
+  <img src="images/image-20200527140421112.png" alt="image-20200527140421112" style="zoom:67%;" />
+
+
+
+- 데이터 
+
+  - Create - POST 메서드 
+  - Read - GET 메서드 
+
+  - Update - PUT 메서드 
+
+  - Delete - DELETE 메서드 
+
+
+
+### GET 이외의 메서드 
+
+#### `app.all` 사용 
+
+```html
+<body>
+    <h1>Hello World Static File </h1>
+    <buttion id = "hello"> 데이터 가져오기 </buttion>
+    <script>
+    	$.ajax({
+            method : 'GET', 
+            url : '/data',
+            success : function(data, textStatus, xhr){
+                $("body").html(data);
+            }
+            
+        })
+    </script>
+</body>
+```
+
+```js
+// 모듈 추출 
+const express = require('express')
+const app = express(); 
+
+// 변수 선언 
+var items = [{
+    name : '우유', 
+    price: '2000'
+}, {
+    name : '홍차', 
+    price :'3000'
+}, {
+    name : '커피', 
+    price : '5000'
+}] ; 
+
+app.use(express.static('public'))
+app.all('/data', (req,res)=>{
+    console.log(req.method)
+    console.log(req.url)
+    res.send("hello")
+})
+
+app.listen(52273, () => {
+	console.log('Server Running at http://127.0.0.1:52273')
+})
+```
+
+![image-20200527144455413](images/image-20200527144455413.png)
+
+
+
+#### RESTful 
+
+-  클라이언트와 서버가 추가적인 의견전달 없이 알아듣도록 약속 
+  - GET  - /data : 모든 데이터를 주세요 
+  - POST - /data : 데이터를 추가할게요 
+  - GET - /data/0 : 0번째 데이터를 주세요 
+  - PUT - /data/0 : 0번째 데이터를 모두 수정할게요 
+  - DELETE - /data/0 : 0번째 데이터를 모두 제거할게요 
+
+```js
+// 모듈 추출 
+const express = require('express')
+const app = express(); 
+
+// 변수 선언 
+var items = [{
+    name : '우유', 
+    price: '2000'
+}, {
+    name : '홍차', 
+    price :'3000'
+}, {
+    name : '커피', 
+    price : '5000'
+}] ; 
+
+app.use(express.static('public'))
+
+app.get('/drink', (req,res)=>{
+    res.send(items)
+})
+
+app.post('/drink', (req,res)=>{
+    items.push({
+        name : '테스트', 
+        price : '테스트'
+    })
+    res.send(items[items.length-1])
+})
+
+app.get('/drink/:id', (req,res)=>{
+    const id = Number(req.params.id)
+    res.send(items[id])
+})
+
+app.put('/drink/:id', (req,res)=>{
+    const id = Number(req.params.id)
+    items[id].name = '테스트'
+    items[id].price = 1000
+    res.send(items[id])
+})
+
+app.delete('/drink/:id', (req,res)=>{
+    const id = Number(req.params.id)
+    items.splice(id,1)
+    res.send("success")
+})
+
+app.listen(52273, () => {
+	console.log('Server Running at http://127.0.0.1:52273')
+})
+```
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title> express Test</title>   
+        <script src = "jquery-3.5.1.js"></script>
+    </head>
+    <body>
+        <h1>Hello World Static File</h1>
+        <button id = "get-all">데이터 가져오기 </button>
+        <button id="post-all">데이터 추가하기</button>
+        <button id="get-one">데이터 하나 가져오기</button>
+        <button id="put-one">데이터 하나 수정하기</button>
+        <button id="delete-one">데이터 하나 삭제하기</button>
+        <script>
+            $('#get-all').click(function(){
+                $.ajax({
+                    url : '/drink', 
+                    method : 'GET', 
+                    success : function(data){
+                        console.log(data); 
+                    }
+                })
+            })
+            $('#post-all').click(function(){
+                $.ajax({
+                    url : '/drink', 
+                    method : 'POST', 
+                    success : function(data){
+                        console.log(data); 
+                    }
+                })
+            })
+            $('#get-one').click(function(){
+                $.ajax({
+                    url : '/drink/0', 
+                    method : 'GET', 
+                    success : function(data){
+                        console.log(data); 
+                    }
+                })
+            })
+            $('#put-one').click(function(){
+                $.ajax({
+                    url : '/drink/0', 
+                    method : 'PUT', 
+                    success : function(data){
+                        console.log(data); 
+                    }
+                })
+            })
+            $('#delete-one').click(function(){
+                $.ajax({
+                    url : '/drink/0', 
+                    method : 'DELETE', 
+                    success : function(data){
+                        console.log(data); 
+                    }
+                })
+            })
+        </script>
+    </body>
+</html>
+```
+
+<img src="images/image-20200527145520900.png" alt="image-20200527145520900" style="zoom:80%;" />
+
+
+
+
+
+
+
+### GET POST PUT DELETE 요청과 응답 데이터 주고 받기 
+
+- 편지 : 가볍다 + 쉽게 처리 
+  - GET 
+  - ?a=10&b=10  : 요청 매개변수 ( 쿼리 )
+- 택배 : 무겁다 + 복잡하게 처리 
+  - POST PUT DELETE 
+  - Body 에 감싸서 보낸다 
+
+
+
+#### GET 
+
+- get 요청을 할 때 `data { } ` 만 하면 데이터가 전달된다. 
+
+  ```html 
+  <script>
+      $('#get-all').click(function(){
+          $.ajax({
+              url : '/drink', 
+              method : 'GET', 
+              data: {
+                  a:"hello_1", 
+                  b:"hello_2"
+              },
+              success : function(data){
+                  console.log(data); 
+              }
+          })
+      })
+  </script>
+  ```
+
+  ```js
+  app.get('/drink', (req,res)=>{
+      console.log(req.query); 
+      res.send(items)
+  })
+  ```
+
+![image-20200527150316657](images/image-20200527150316657.png)
+
+
+
+
+
+#### POST
+
+```html
+<script>
+    $('#post-all').click(function(){
+        $.ajax({
+            url : '/drink', 
+            method : 'POST', 
+            data : {
+                a : "hello_1", 
+                b : "hello_2"
+            },
+            success : function(data){
+                console.log(data); 
+            }
+        })
+    })
+</script>
+```
+
+![image-20200527150523404](images/image-20200527150523404.png)
+
+위의 Data Body - Form Data 를 서버에서 받으려면 매우 복잡한 처리가 필요하다.  따라서 우리는 라이브러리를 활용 
+
+
+
+- 라이브러리 설치 
+
+  ```bash
+  > npm install body-parser
+  
+  npm WARN saveError ENOENT: no such file or directory, open 'C:\Users\User\workspace\test\package.json'
+  npm WARN enoent ENOENT: no such file or directory, open 'C:\Users\User\workspace\test\package.json'
+  npm WARN test No description
+  npm WARN test No repository field.
+  npm WARN test No README data
+  npm WARN test No license field.
+  
+  + body-parser@1.19.0
+  updated 1 package and audited 113 packages in 0.972s
+  found 11 vulnerabilities (4 low, 3 moderate, 4 high)
+    run `npm audit fix` to fix them, or `npm audit` for details
+  ```
+
+- `js` 파일에 라이브러리 추가 
+
+  ```js
+  // 모듈 추출 
+  const express = require('express')
+  const bodyParser = require('body-parser')
+  const app = express(); 
+  ```
+
+- 자세한 사용법은 문서를 보고 파악. 
+
+  http:// github.com/expressjs/body-parser
+
+- 사용 
+
+  ```js
+  // 상단에 아래 코드 추가 
+  app.use(bodyParser.urlencoded({extended : false}))
+  
+  app.post('/drink', (req,res)=>{
+      items.push({
+          name : '테스트', 
+          price : '테스트'
+      })
+      console.log(req.body)
+      res.send(items[items.length-1])
+  })
+  ```
+
+  ![image-20200527151002806](images/image-20200527151002806.png)
+
+
+
+
+
+실습  _  input 태그를 통해 데이터를 입력받아서 수정하기 
+
+```html
+  <hr />
+        <span>이름 : </span>        <input id= "name"> 
+        <br />
+        <span>가격 : </span>        <input id= "price">
+        <script>
+            $('#post-all').click(function(){
+                $.ajax({
+                    url : '/drink', 
+                    method : 'POST', 
+                    data : {
+                      name : $("#name").val(), 
+                      price : $("#price").val()
+                    },
+                    success : function(data){
+                        console.log(data); 
+                    }
+                })
+            })
+</script>           
+```
+
+```js
+app.post('/drink', (req,res)=>{
+    items.push({
+        name : req.body.name,
+        price : req.body.price
+    })
+    console.log(req.body)
+    res.send(items[items.length-1])
+})
+```
+
+![image-20200527151436544](images/image-20200527151436544.png)
