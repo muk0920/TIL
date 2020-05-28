@@ -383,3 +383,41 @@ select 열이름 from 테이블 T1, 테이블 T2 where 조건;
 select 열이름 from 테이블 T1 join 테이블T2 on T1.열이름 = T2.열이름 ; 
 ```
 
+
+
+## `Union` 
+
+
+
+```mssql
+select 열이름 from 테이블1 union select 열이름 from 테이블2; 
+```
+
+
+
+- 중복값을 허용하려면 `Union All` 을 사용해야한다. 
+
+  ```mssql
+  select 열이름 from 테이블1 union all select 열이름 from 테이블2; 
+  ```
+
+  
+
+예시 ) - 별칭 사용 
+
+```mssql
+SELECT 'Customer' As Type, ContactName, City, Country
+FROM Customers
+UNION
+SELECT 'Supplier', ContactName, City, Country
+FROM Suppliers;
+```
+
+<img src="images/image-20200528172206529.png" alt="image-20200528172206529" style="zoom:80%;" />
+
+
+
+
+
+## `Group By` 
+
