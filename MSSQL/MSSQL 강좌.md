@@ -421,3 +421,35 @@ FROM Suppliers;
 
 ## `Group By` 
 
+
+
+- 결과 집합을 하나 이상의 열로 그룹화하기 위해 Count, Max, Min, Sum, Avg 와 함께 종종 사용된다. 
+
+```mssql
+select 열이름 from 테이블이름 where 조건 group by 열이름 order by 열이름; 
+```
+
+
+
+
+
+## `Having`
+
+
+
+```mssql
+select 열이름 from 테이블 where 조건 group by 열이름 having 조건 order by 열이름; 
+```
+
+
+
+
+
+## `Exist` 
+
+
+
+```mssql
+select 열이름 from 테이블이름 where exists (select 열이름 from 테이블이름 where 조건 );  
+```
+
