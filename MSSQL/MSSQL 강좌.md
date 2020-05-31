@@ -59,6 +59,8 @@ select top 숫자 percent 열이름 from 테이블이름 where 조건;
 select 열1, 열2 ... from 테이블이름 where 조건; 
 ```
 
+![image-20200531160631148](images/image-20200531160631148.png)
+
 
 
 ## `And` , `Or` , `Not` 
@@ -453,3 +455,20 @@ select 열이름 from 테이블 where 조건 group by 열이름 having 조건 or
 select 열이름 from 테이블이름 where exists (select 열이름 from 테이블이름 where 조건 );  
 ```
 
+
+
+
+
+## `case` 
+
+
+
+```mssql
+CASE 
+	WHEN 조건1 THEN 결과1
+	WHEN 조건2 THEN 결과2 
+	ELSE
+END; 
+```
+
+![image-20200531174852472](images/image-20200531174852472.png)
