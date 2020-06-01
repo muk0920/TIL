@@ -457,6 +457,40 @@ select 열이름 from 테이블이름 where exists (select 열이름 from 테이
 
 
 
+## `Select Into` 
+
+
+
+- 새로운 테이블에 열들을 복사
+
+```mssql
+select * into 새로운테이블 [in externaldb] from 기존테이블 where 조건; 
+```
+
+```mssql
+select 열이름1,열이름2, ... into 새로운테이블 [in externaldb] from 기존테이블 where 조건; 
+```
+
+
+
+
+
+## `Insert Into Select` 
+
+
+
+- 기존의 테이블에 있는 데이터를 목사하여 다른 테이블에 삽입 
+
+```mssql
+insert into 테이블2 select * from 테이블1 from 조건; 
+```
+
+```mssql
+insert into 테이블2 (열이름1, 열이름2, ...) select 열이름1, 열이름2 ... from 테이블1 where 조건; 
+```
+
+
+
 
 
 ## `case` 
@@ -472,3 +506,40 @@ END;
 ```
 
 ![image-20200531174852472](images/image-20200531174852472.png)
+
+
+
+
+
+## `DECLARE` 
+
+
+
+- 변수 선언 
+
+  ```mssql
+  DECLARE @변수명 데이터형식
+  
+  --ex)
+  DECLARE @a INT
+  ```
+
+- 변수 사용 
+
+  ```mssql 
+  SET @변수명=값
+  
+  --ex)
+  SET @a=1
+  ```
+
+- 변수의 값을 출력 시 
+
+  ```mssql
+  SELECT 변수명 
+  
+  --ex)
+  SELECT @a; 
+  ```
+
+  
