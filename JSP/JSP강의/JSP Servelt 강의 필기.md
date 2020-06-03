@@ -835,3 +835,106 @@ public class ModifyOk extends HttpServlet {
 </html>
 ```
 
+
+
+
+
+# 21강 
+
+
+
+```html
+<!-- join.html -->
+
+<input type="button" value="회원가입" onclick="javascript:window.location=join.jsp">
+```
+
+클릭 이벤트가 발생할 경우 `join.jsp` 로 이동해라 
+
+
+
+```jsp
+// joinOk.jsp 파일 
+
+<jsp:setProperty name="dto" property = "*" />
+```
+
+`*` 를 이용해서 속성을 자동적으로 입력하게 하려면, Dto 의 속성의 변수명과 join.form 의 input 이름이 같아야 자동으로 입력이 된다. 
+
+
+
+
+
+# 22강 
+
+
+
+여러가지 라이브러리가 존재하고, 우리가 실습한 라이브러리는 cos.jar 파일 라이브러리이다. 
+
+
+
+```jsp
+<!-- fileForm.jsp -->
+<form action = "fileFormOk.jsp" method="post" enctype="multipart/form-data">
+    
+</form>
+```
+
+`enctype = "multipart/form-data"`  라고 명시를 해야 파일 첨부가 정상적으로 이루어진다. 
+
+
+
+# 23강 
+
+
+
+![image-20200603163341494](images/image-20200603163341494.png)
+
+
+
+
+
+![image-20200603164049179](images/image-20200603164049179.png)
+
+
+
+
+
+# 24강 
+
+
+
+```jsp
+	<c:set var="varName" value="varValue" />
+	varName : <c:out value = "${varName }" /> 
+```
+
+![image-20200603165916931](images/image-20200603165916931.png)
+
+```jsp
+	<c:set var="varName" value="varValue" />
+	varName : <c:out value = "${varName }" /><br /> 
+	
+	<c:remove var="varName" />
+	varName : <c:out value = "${varName }" />
+```
+
+![image-20200603165956880](images/image-20200603165956880.png)
+
+```jsp
+	<c:forEach var="fe" begin="0" end="100" step ="5">
+		${fe}<br />
+	</c:forEach>
+```
+
+<img src="images/image-20200603170101759.png" alt="image-20200603170101759" style="zoom:67%;" />
+
+
+
+
+
+# 25강 
+
+
+
+![image-20200603171059579](images/image-20200603171059579.png)
