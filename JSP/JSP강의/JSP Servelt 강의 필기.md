@@ -839,6 +839,406 @@ public class ModifyOk extends HttpServlet {
 
 
 
+# 20강. 커넥션풀 
+
+
+
+### DAO _ DTO
+
+- **DAO** : Data Access Object  
+  - DB에 접근하여 어떠한 로직을 수행하는 객체 
+  - 데이터베이스에 접속해서 데이터 추가, 삭체, 수정 등의 작업을 하는 클래스. 
+  - 유지보수 및 코드의 모듈화를 위해 별도의 DAO 클래스를 만들어 사용한다. 
+
+
+
+- **DTO** : Data Transfer Object 
+
+  - Data를 모아서 객체로 묶어서 하나로 관리하는 객체  
+  - DAO 클래스를 이용하여 데이터베이스에서 데이터를 관리할 때 데이터를 일반적인 변수에 할당하여 작업할 수도 있지만, 해당 데이터의 클래스르 만들어 사용. 
+
+  
+
+#### 예제 1) 
+
+##### MemberDTO.java
+
+```java
+package com.javalec.daotoex;
+
+public class MemberDTO {
+
+	private String name;
+	private String id;
+	private String pw;
+	private String phone1;
+	private String phone2;
+	private String phone3;
+	private String gender;
+	
+	public MemberDTO(String name, String id, String pw, String phone1, String phone2, String phone3, String gender) {
+		this.name = name;
+		this.id = id;
+		this.pw = pw;
+		this.phone1 = phone1;
+		this.phone2 = phone2;
+		this.phone3 = phone3;
+		this.gender = gender;
+	}
+
+	// ... 
+    //     getter , setter 존재 
+    // ...
+}
+```
+
+##### MemberDAO.java
+
+```java
+package com.javalec.daotoex;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+public class MemberDAO {
+
+	private String url = "jdbc:sqlserver://localhost:9036;database=master;integratedSecurity=true";
+	
+	public MemberDAO() {
+		try {
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public ArrayList<MemberDTO> memberSelect() {
+		
+		ArrayList<MemberDTO> dtos = new ArrayList<MemberDTO>();
+		
+		Connection con =null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = DriverManager.getConnection(url);
+			stmt = con.createStatement();
+			rs = stmt.executeQuery("select * from member");
+			
+			while (rs.next()) {
+				String name = rs.getString("name");
+				String id = rs.getString("id");
+				String pw = rs.getString("pw");
+				String phone1 = rs.getString("phone1");
+				String phone2 = rs.getString("phone2");
+				String phone3 = rs.getString("phone3");
+				String gender = rs.getString("gender");
+				
+				MemberDTO dto = new MemberDTO(name, id, pw, phone1, phone2, phone3, gender);
+				dtos.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(stmt != null) stmt.close();
+				if(con != null) con.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return dtos;
+	}
+}
+```
+
+##### memberSelect.jsp
+
+```jsp
+<%@page import="com.javalec.daotoex.MemberDTO"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.javalec.daotoex.MemberDAO"%>
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<%
+		MemberDAO memberDAO = new MemberDAO();
+		ArrayList<MemberDTO> dtos = memberDAO.memberSelect();
+		
+		for(int i=0; i<dtos.size(); i++) {
+			MemberDTO dto = dtos.get(i);
+			String name = dto.getName();
+			String id = dto.getId();
+			String pw = dto.getPw();
+			String phone = dto.getPhone1() + " - "+ dto.getPhone2() + " - " + dto.getPhone3();
+			String gender = dto.getGender();
+			
+			out.println("이름 : " + name + ", 아이디 : " + id + ", 비밀번호 : " + pw + ", 연락처 : " + phone + ",  성별 : " + gender + "<br />" );
+		}	
+	%>
+</body>
+</html>
+```
+
+![image-20200603214735390](images/image-20200603214735390.png)
+
+
+
+
+
+### PreparedStatement 객체 
+
+- Statement 객체의 중복 코드가 많아지는 단점을 보완한 객체 
+
+- query 문 작성 이후 SET 을 이용하여 값들을 삽입. 
+
+  ```java
+  Class.forName(driver); 
+  connection = DriverManager.getConnection(url, uid, upw); 
+  int n; 
+  String query = "insert into memberforpre (id, pw, name, phone ) values (?,?,?,?)"; 
+  preparedStatement = connection.prepareStatement(query); 
+  
+  preparedStatement.setString(1, "abc"); 
+  preparedStatement.setString(2, "1235"); 
+  preparedStatement.setString(3, "홍길동"); 
+  preparedStatement.setString(4, "010-1234-5678"); 
+  n = preparedStatement.executeUpdate(); 
+  ```
+
+
+
+#### 예제 2) 
+
+##### memberDatainsert.jsp 
+
+```jsp
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Connection"%>
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+    <%!
+		Connection connection;
+		PreparedStatement preparedStatement;
+		ResultSet resultSet;
+	
+		String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+		String url = "jdbc:sqlserver://localhost:9036;database=master;integratedSecurity=true";
+	%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<%
+		try{
+			
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url);
+			int n;
+			String query = "insert into member (id, pw, name, phone) values (?, ?, ?, ?)";
+			preparedStatement = connection.prepareStatement(query);
+			
+			preparedStatement.setString(1, "abc");
+			preparedStatement.setString(2, "123");
+			preparedStatement.setString(3, "홍길동");
+			preparedStatement.setString(4, "010-1234-5678");
+			n = preparedStatement.executeUpdate();
+			
+			preparedStatement.setString(1, "def");
+			preparedStatement.setString(2, "456");
+			preparedStatement.setString(3, "홍길자");
+			preparedStatement.setString(4, "010-9012-3456");
+			n = preparedStatement.executeUpdate();
+			
+			preparedStatement.setString(1, "ghi");
+			preparedStatement.setString(2, "789");
+			preparedStatement.setString(3, "홍길순");
+			preparedStatement.setString(4, "010-7890-1234");
+			n = preparedStatement.executeUpdate();
+			
+			preparedStatement.setString(1, "AAA");
+			preparedStatement.setString(2, "111");
+			preparedStatement.setString(3, "이길동");
+			preparedStatement.setString(4, "010-1234-1111");
+			n = preparedStatement.executeUpdate();
+			
+			if(n == 1) {
+				out.println("insert success");
+			} else { 
+				out.println("insert fail");
+			}
+			
+		} catch(Exception e) {
+				e.printStackTrace();
+		} finally {
+			try{
+				if(resultSet != null) resultSet.close();
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+			} catch(Exception e){}
+		}
+	%>
+	
+	<br />
+	<a href="memberDateView.jsp">회원정보 보기</a>
+
+</body>
+</html>
+```
+
+
+
+
+
+
+
+### 커넥션 풀 (DBCP) 
+
+- 클라이언트에서 다수의 요청이 발생할 경우 데이터베이스의 부하가 발생하는데 이를 해결하기 위한 기법. 
+- 미리 Connection 객체들을 많이 생성하고 ,이를 이용. 
+
+<img src="images/image-20200603213720772.png" alt="image-20200603213720772" style="zoom:67%;" />
+
+- Tomcat 컨테이너가 데이터베이스 인증을 하도록 context.xml 파일을 열어 아래의 코드를 추가. 
+
+  ```xml
+  <Resource 
+            auth = "Container"
+            driverClassName = 
+            url = 
+            username = 
+            password = 
+            name = 
+            type = 
+            maxActive = 
+            maxWait = 
+  />
+  ```
+
+
+
+이후 `publish to server` 버튼을 클릭하여 해당 파일을 서버와 동기화. 
+
+![image-20200603213923521](images/image-20200603213923521.png)
+
+
+
+
+
+#### 예제 3)
+
+##### Tomcat 컨테이너 context.xml
+
+```xml
+	<Resource 
+		auth = "Container"
+		driverClassName = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+		url = "jdbc:sqlserver://localhost:9036;database=master;integratedSecurity=true"
+		name = "mssql-jdbc-6.4.0.jre7"
+		type = "javax.sql.DataSource"
+		maxActive = "50"
+		maxWait = "1000"
+	/>
+```
+
+##### MemberDAO.java
+
+```java
+package com.javalec.daotoex;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
+public class MemberDAO {
+
+	private DataSource dataSource;
+	
+	public MemberDAO() {
+		try {
+			Context context = new InitialContext();
+			dataSource = (DataSource)context.lookup("java:comp/env/mssql-jdbc-6.4.0.jre7");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public ArrayList<MemberDTO> memberSelect() {
+		
+		ArrayList<MemberDTO> dtos = new ArrayList<MemberDTO>();
+		
+		Connection con =null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = dataSource.getConnection();
+			stmt = con.createStatement();
+			rs = stmt.executeQuery("select * from member");
+			
+			while (rs.next()) {
+				String name = rs.getString("name");
+				String id = rs.getString("id");
+				String pw = rs.getString("pw");
+				String phone1 = rs.getString("phone1");
+				String phone2 = rs.getString("phone2");
+				String phone3 = rs.getString("phone3");
+				String gender = rs.getString("gender");
+				
+				MemberDTO dto = new MemberDTO(name, id, pw, phone1, phone2, phone3, gender);
+				dtos.add(dto);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(stmt != null) stmt.close();
+				if(con != null) con.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return dtos;
+	}
+	
+}
+
+```
+
+나머지 소스는 예제 1 번과 동일. 
+
+![image-20200603220741291](images/image-20200603220741291.png)
+
+
+
+
+
 # 21강 
 
 
@@ -865,22 +1265,86 @@ public class ModifyOk extends HttpServlet {
 
 
 
-# 22강 
+# 22강. 파일 업로드 
 
 
 
-여러가지 라이브러리가 존재하고, 우리가 실습한 라이브러리는 cos.jar 파일 라이브러리이다. 
+- 파일 업로드 라이브러리 다운로드 및 설치 
 
+  http://www.servlets.com 접속 후 아래 과정을 통해 설치 
 
+  ![image-20200603222847088](images/image-20200603222847088.png)
+
+- 여러가지 라이브러리가 존재하고, 우리가 실습한 라이브러리는 cos.jar 파일 라이브러리이다. 
+
+- 다운로드 받은 라이브러리를 `WEB-INF` -> `lib` 로 복사한다. 
+- 업로드 파일을 저장할 폴더를 생성한다. 
+
+#### fileForm.jsp
 
 ```jsp
-<!-- fileForm.jsp -->
-<form action = "fileFormOk.jsp" method="post" enctype="multipart/form-data">
-    
-</form>
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<form action="fileFormOk.jsp" method="post" enctype="multipart/form-data">
+		파일 : <input type="file" name="file"><br />
+		<input type="submit" value="File Upload">
+	</form>
+
+</body>
+</html>
 ```
 
 `enctype = "multipart/form-data"`  라고 명시를 해야 파일 첨부가 정상적으로 이루어진다. 
+
+
+
+#### fileFormOk.jsp
+
+```jsp
+<%@page import="java.util.Enumeration"%>
+<%@page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy"%>
+<%@page import="com.oreilly.servlet.MultipartRequest"%>
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<%
+	String path = request.getRealPath("fileFolder");
+
+	int size = 1024 * 1024 * 10; //10M
+	String file = "";
+	String oriFile = "";
+	
+	try{
+		MultipartRequest multi = new MultipartRequest(request, path, size, "EUC-KR", new DefaultFileRenamePolicy());
+		
+		Enumeration files = multi.getFileNames();
+		String str = (String)files.nextElement();
+		
+		file = multi.getFilesystemName(str);
+		oriFile = multi.getOriginalFileName(str);
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+ 	file upload success!
+</body>
+</html>
+```
 
 
 
