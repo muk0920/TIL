@@ -225,3 +225,613 @@ get 의 한글 설정은 server.xml 파일에서 해주면 되고 , post 의 한
 
 ServletContext 는 특정한 서블릿만 사용하는 것이 아니기 때문에, web.xml 의 공통부분에 기술한다. 주의할 점은 서블릿을 맵핑하는 태그보다는 상단에 위치해야한다. 
 
+
+
+
+
+
+
+
+
+
+
+# 18강 데이터베이스 2 
+
+
+
+JDBC의 특징은 다양한 데이터베이스에 대해서 별도의 프로그램을 만들 필요 없이, 해당 데이터 베이스의 JDBC를 이용하면 하나의 프로그램으로 데이터베이스를 관리할 수 있다. 
+
+
+
+#### 데이터베이스 연결 순서 
+
+
+
+**JDBC 드라이버 로드**   :  [DriverManager] - `Class.forName()` 
+
+**데이터베이스 연결**  :  [Connection] - `DriverManager.getConnection(url, uid, upw);` 
+
+**SQL문 실행** :  [Statement]  - `connection.createStatement()` 
+
+**데이터베이스 연결 해제**  : [ResultSet]  -  `statement.executeQuery()` , `statement.executeUpdate()` 
+
+
+
+
+
+##### Statement 객체 - 쿼리를 실행하는 객체
+
+- `executeQuery()` : SQL문 실행 후 여러 개의 결과값 생기는 경우 사용  (반환형이 ResultSet 객체)
+
+  ex_ select 
+
+- `executeUpdate()` : SQL문 실행 후 테이블의 내용만 변경되는 경우 사용 ( 반환형이 int 형 )
+
+  ex_ insert, delete, update 
+
+
+
+-  ResultSet 레코드 셋 
+  - next() : 다음 레코드로 이동 
+  - previous() : 이전 레코드로 이동 
+  - first() : 처음으로 이동 
+  - last() : 마지막으로 이동 
+  - get메소드(getString, getInt) 
+
+
+
+```java
+<%!
+    Connection connection ; 
+	Statement statement; 
+	ResultSet resultSet; 
+ 
+	String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver"; 
+	String url = "jdbc:sqlserver://localhost:9036; database=master; integratedSecurity=true";
+    String query = "select * from member"; 
+%>
+        
+<%
+	try{
+        Class.forName(driver);  // JDBC 드라이버 로드 
+        connection = DriverManager.getConnection(url);  // 데이터베이스 연결 
+        statement = connection.createStatement(); 
+        resultSet = statement.executeQuery(query); 
+        
+        while(resultSet.next()){
+            ...
+        }
+    }
+%>
+```
+
+
+
+
+
+# 19강 데이터베이스 3 
+
+
+
+### 실습 흐름도
+
+![image-20200602220242975](images/image-20200602220242975.png)
+
+
+
+#### join.html
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="JoinOk.java" method = "post">
+		이름 : <input type="text" name = "name" size = "10"><br />
+		아이디 : <input type="text" name = "id" size ="10"><br />
+		비밀번호 : <input type="password" name="pw" size ="10"><br />
+		전화번호 :  <select name ="phone1">
+			<option value="010">010</option>
+			<option value="016">016</option>
+			<option value="017">017</option>
+			<option value="018">018</option>
+			<option value="019">019</option>
+			<option value="011">011</option>
+		</select> - 
+		<input type="text" name ="phone2" size = "4" >-<input type="text" name ="phone3" size = "4" ><br />
+		성별 구분 : <input type="radio" name="gender" value ="man"> 남자 &nbsp; <input type="radio" name="gender" value="woman">여자<br />
+		<input type="submit" value="회원가입"> <input type="reset" value = "취소">
+	</form>
+</body>
+</html>
+```
+
+![image-20200602220334745](images/image-20200602220334745.png)
+
+
+
+
+
+#### JoinOk.java  - servlet 
+
+```java
+package com.javalec.ex;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.sql.*; 
+
+@WebServlet("/JoinOk")
+public class JoinOk extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    
+	private Connection connection ; 
+	private Statement stmt; 
+	
+	private String id, pw, name, phone1, phone2, phone3, gender; 
+	
+    public JoinOk() {
+        super();
+    
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		actionDo(request, response); 
+	}
+	
+	private void actionDo(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
+		req.setCharacterEncoding("EUC-KR");
+		
+		id = req.getParameter("id");
+		pw = req.getParameter("pw");
+		name = req.getParameter("name");
+		phone1 = req.getParameter("phone1");
+		phone2 = req.getParameter("phone2");
+		phone3 = req.getParameter("phone3");
+		gender = req.getParameter("gender");
+		
+		String query = "insert into member values ('"+name+"','"+id+"','"+pw + "','" + phone1 + "','" + phone2 + "','" + phone3 + "','" + gender + "')";
+		
+		try{
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver"); 
+			connection = DriverManager.getConnection("jdbc:sqlserver://localhost:9036;database=master;integratedSecurity=true");
+			stmt = connection.createStatement(); 
+			int i = stmt.executeUpdate(query); 
+			
+			if(i==1){
+				System.out.println("insert success");
+				res.sendRedirect("joinResult.jsp"); 
+			}else{
+				System.out.println("insert fail");
+				res.sendRedirect("join.html"); 
+			}
+		}catch(Exception e){
+			e.printStackTrace(); 
+		}finally{
+			try{
+				if(connection != null) connection.close(); 
+				if(stmt != null) stmt.close(); 
+			}catch(Exception e2){
+				e2.printStackTrace();
+			}
+		}
+	}
+}
+```
+
+![image-20200602222501357](images/image-20200602222501357.png)
+
+
+
+#### joinResult.jsp
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+	회원가입이 정상 처리 되었습니다. <br />
+	<a href = "login.html"> 로그인 </a>
+</body>
+</html>
+```
+
+
+
+
+
+#### login.html
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="LoginOk" method="post">
+		아이디 : <input type="text" name="id"><br />
+		비밀번호 : <input type="text" name="pw"><br />
+		<input type="submit" value="로그인">
+	</form>
+</body>
+</html>
+```
+
+
+
+
+
+#### LoginOk.java - servlet 
+
+```java
+package com.javalec.ex;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import java.sql.*; 
+
+@WebServlet("/LoginOk")
+public class LoginOk extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+	private Connection conn; 
+	private Statement stmt; 
+	private ResultSet resultSet; 
+	
+	private String name, id, pw, phone1, phone2, phone3, gender ;
+	
+
+    public LoginOk() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+	}
+
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		actionDo(request, response); 
+	}
+	
+	private void actionDo(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+		
+		id = req.getParameter("id"); 
+		pw = req.getParameter("pw");
+		
+		String query = "select * from member where id = '"+ id+ "'and pw = '" + pw + "'";
+		String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+		String url = "jdbc:sqlserver://localhost:9036;database=master;integratedSecurity=true";
+		
+		try{
+			Class.forName(driver); 
+			conn = DriverManager.getConnection(url); 
+			stmt = conn.createStatement(); 
+			resultSet = stmt.executeQuery(query); 
+			
+			while(resultSet.next()){
+				name = resultSet.getString("name"); 
+				id = resultSet.getString("id");
+				pw = resultSet.getString("pw");
+				phone1 = resultSet.getString("phone1");
+				phone2 = resultSet.getString("phone2");
+				phone3 = resultSet.getString("phone3");
+				gender = resultSet.getString("gender");
+			}
+			
+			HttpSession httpSession = req.getSession(); 
+			httpSession.setAttribute("name",name); 
+			httpSession.setAttribute("id", id); 
+			httpSession.setAttribute("pw", pw); 
+			
+			res.sendRedirect("loginResult.jsp");
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			try{
+				if(stmt != null) stmt.close(); 
+				if(conn != null ) conn.close(); 
+				if(resultSet != null) resultSet.close(); 
+			}catch(Exception e2){
+				e2.printStackTrace();
+			}
+		}
+	}
+}
+```
+
+![image-20200602223941759](images/image-20200602223941759.png)
+
+
+
+#### loginResult.jsp
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+	<%!
+		String id, name, pw; 
+	%>
+	
+	<%
+		id = (String)session.getAttribute("id"); 
+		name = (String)session.getAttribute("name"); 
+		pw = (String)session.getAttribute("pw"); 
+	%>
+	
+	<%= name %> 님 안녕하세요. <br />
+	
+	<a href="modify.jsp"> 정보 수정하기 </a>
+</body>
+</html>
+```
+
+
+
+
+
+#### modify.jsp 
+
+```jsp
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.Connection"%>
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+	<%!
+		Connection conn; 
+		Statement stmt; 
+		ResultSet resultSet; 
+		
+		String id, pw, name, phone1, phone2, phone3, gender ; 
+	%>
+	
+	<%
+		id = (String)session.getAttribute("id"); 
+	
+		String query = "select * from member where id= '" + id + "'";
+		
+		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver"); 
+		conn = DriverManager.getConnection("jdbc:sqlserver://localhost:9036;database=master;integratedSecurity=true");
+		stmt = conn.createStatement(); 
+		resultSet = stmt.executeQuery(query); 
+		
+		while(resultSet.next()){
+			name = resultSet.getString("name");
+			pw = resultSet.getString("pw"); 
+			phone1 = resultSet.getString("phone1"); 
+			phone2 = resultSet.getString("phone2"); 
+			phone3 = resultSet.getString("phone3"); 
+			gender = resultSet.getString("gender"); 
+		}
+	%>
+	
+	<form action ="ModifyOk" method = "post">
+		이름 : <input type="text" name = "name" size = "10" value=<%= name %>><br />
+		아이디 : <%= id %><br />
+		비밀번호 : <input type="password" name ="pw" size="10" ><br />
+		전화번호 : <select name="phone1">
+			<option value="010">010</option>
+			<option value="016">016</option> 
+			<option value="017">017</option>
+			<option value="018">018</option>
+			<option value="019">019</option>
+			<option value="011">011</option>
+		</select> - 
+		<input type="text" name="phone2" size="5" value=<%= phone2 %>> - <input type="text" name="phone3" size="5" value=<%= phone3 %>> <br />
+		
+		<%
+			if(gender.equals("man")){
+		%>
+		성별 구분 : <input type = "radio" name = "gender" value ="man" checked="checked"> 남 &nbsp; <input type = "radio" name="gender" value ="woman">여 <br />
+		<%
+			} else{
+		%>
+				성별 구분 : <input type = "radio" name = "gender" value ="man"> 남 &nbsp; <input type = "radio" name="gender" value ="woman" checked = "checked">여 <br />
+		<% } %>
+		
+		<input type="submit" value="정보수정"> <input type="reset" value="취소">
+		
+	</form>
+</body>
+</html>
+```
+
+
+
+#### ModifyOk.java - servlet
+
+```java
+package com.javalec.ex;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import java.sql.*; 
+
+
+@WebServlet("/ModifyOk")
+public class ModifyOk extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	private Connection connection; 
+	private Statement stmt; 
+	private ResultSet resultSet; 
+	HttpSession httpSession; 
+	
+	private String name, id, pw, phone1, phone2, phone3, gender;  
+	
+    public ModifyOk() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+	}
+
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		actionDo(request, response); 
+	}
+	
+	private void actionDo(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
+		req.setCharacterEncoding("EUC-KR");
+		httpSession = req.getSession(); 
+		
+		name = req.getParameter("name"); 
+		id = req.getParameter("id");
+		pw = req.getParameter("pw");
+		phone1= req.getParameter("phone1");
+		phone2= req.getParameter("phone2");
+		phone3= req.getParameter("phone3");
+		gender = req.getParameter("gender");
+		
+		if(pwConfirm()){
+			System.out.println("OK");
+			String query = "update member set name = '" + name + "', phone1 = '" + phone1 + "',phone2 = '" + phone2 + "',phone3='" + phone3 + "',gender='" + gender + "'";
+			
+			try{
+				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+				connection = DriverManager.getConnection("jdbc:sqlserver://localhost:9036;database=master;integratedSecurity=true"); 
+				stmt = connection.createStatement(); 
+				int i = stmt.executeUpdate(query); 
+				
+				if(i==1){
+					System.out.println("update sucess");
+					httpSession.setAttribute("name",name); 
+					res.sendRedirect("modifyResult.jsp"); 
+				}else{
+					System.out.println("update fail");
+					res.sendRedirect("modify.jsp");
+				}
+			}catch(Exception e){
+				e.printStackTrace(); 
+			}finally{
+				try{
+					if(stmt != null) stmt.close(); 
+					if(connection != null) connection.close(); 
+				}catch(Exception e2){
+					e2.printStackTrace();
+				}
+			}
+		}else{
+			System.out.println("NG");
+		}
+	}
+	
+	
+	private boolean pwConfirm(){
+		boolean rs = false; 
+		String sessionPw = (String)httpSession.getAttribute("pw"); 
+		
+		if(sessionPw.equals(pw)){
+			rs= true; 
+		}else{
+			rs = false; 
+		}
+		return rs; 
+	}
+}
+```
+
+![image-20200602225730633](images/image-20200602225730633.png)
+
+
+
+#### modifyResult.jsp
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+	<%= session.getAttribute("name") %>님의 회원정보 수정이 정상 처리 되었습니다. <br />
+	
+	<a href = "logout.jsp">로그아웃</a> &nbsp; 
+	<a href = "modify.jsp">정보수정</a>
+</body>
+</html>
+```
+
+
+
+
+
+#### logout.jsp
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+	<%
+		session.invalidate(); 
+		response.sendRedirect("login.html"); 
+	%>
+</body>
+</html>
+```
+
