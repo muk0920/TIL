@@ -1346,27 +1346,248 @@ public class MemberDAO {
 </html>
 ```
 
-
-
-# 23강 
-
-
-
-![image-20200603163341494](images/image-20200603163341494.png)
+`DefaultFileRenamePolicy()` : 동일한 파일명이 존재할 경우 파일명 뒤에 1, 2, 3 ... 을 붙이는 기본 규칙. 
 
 
 
+파일을 업로드 할 경우 해당 프로젝트 디렉터리 내에서 파일이 생성되는 것이 아니라, 서버쪽 Tomcat 의 디렉터리 하단에 파일이 생성된다. 
 
-
-![image-20200603164049179](images/image-20200603164049179.png)
-
-
+<img src="images/image-20200604082948961.png" alt="image-20200604082948961" style="zoom:80%;" />
 
 
 
-# 24강 
+# 23강. EL ( Expression Language )
+
+### EL ( Expression Language) 
+
+- 표현식 또는 액션 태그를 대신해서 값을 표현하는 언어. 
+
+<img src="images/image-20200604083914168.png" alt="image-20200604083914168" style="zoom:67%;" />
 
 
+
+예시) 
+
+![image-20200604084346195](images/image-20200604084346195.png)
+
+
+
+
+
+### 액션태그로 사용되는 EL
+
+<img src="images/image-20200604084604098.png" alt="image-20200604084604098" style="zoom:80%;" />
+
+
+
+예시) 
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<jsp:useBean id="member" class="com.javalec.ex.MemberInfo" scope="page" />
+<jsp:setProperty name="member" property="name" value="홍길동"/>
+<jsp:setProperty name="member" property="id" value="abc"/>
+<jsp:setProperty name="member" property="pw" value="123"/>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+	이름 : <jsp:getProperty name="member" property="name"/><br />
+	아이디 : <jsp:getProperty name="member" property="id"/><br />
+	비밀번호 : <jsp:getProperty name="member" property="pw"/><br />
+	
+	<hr /> <!--위의 액션태그와 아래 표현식은 동일한 기능 수행 -->
+	
+	이름 : ${member.name }<br />
+	아이디 : ${member.id }<br />
+	비밀번호 : ${member.pw }<br />
+	
+</body>
+</html>
+```
+
+
+
+### 내장 객체 
+
+- **pageScope** : page 객체를 참조하는 객체 
+- **requestScope** : request 객체를 참조하는 객체 
+- **sessionScope** : session 객체를 참조하는 객체 
+- **applicationScope** : application 객체를 참조하는 객체 
+- **param** : 요청 파라미터를 참조하는 객체 
+- **paramValues** : 요청 파라미터(배열)를 참조하는 객체 
+- **initParam** : 초기화 파라미터를 참조하는 객체 
+- **cookie** : cookie 객체를 참조하는 객체 
+
+
+
+예시) 
+
+```jsp
+<!-- objel.jsp --> 
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+	
+	<form action="objelOk.jsp" method="get">
+		아이디 : <input type="text" name="id"><br />
+		비밀번호 : <input type="password" name="pw">
+		<input type="submit" value="login">
+	</form>
+	
+	<% 
+		application.setAttribute("application_name", "application_value");
+		session.setAttribute("session_name", "session_value");
+		pageContext.setAttribute("page_name", "page_value");
+		request.setAttribute("request_name", "request_value");
+	%>
+	
+</body>
+</html>
+```
+
+```jsp
+<!-- objelOk.jsp -->
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+	
+	<%
+		String id = request.getParameter("id");
+		String pw = request.getParameter("pw");
+	%>
+	
+	아이디 : <%= id %> <br />
+	비밀번호 : <%= pw %>
+	
+	<hr />
+	
+	아이디 : ${ param.id } <br />
+	비밀번호 : ${ param.pw } <br />
+	
+	<hr />
+	아이디 : ${ param["id"] } <br />
+	비밀번호 : ${ param["pw"] }
+	
+	<hr />
+	
+	applicationScope : ${ applicationScope.application_name }<br />
+	sessionScope : ${ sessionScope.session_name }<br />
+	pageScope : ${ pageScope.page_name }<br />
+	requestScope : ${ requestScope.request_name }
+	
+	<hr />
+	
+	context 초기화 파라미터<br />
+	${ initParam.con_name } <br />
+	${ initParam.con_id } <br />
+	${ initParam.con_pw } <br />
+</body>
+</html>
+```
+
+
+
+web.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>jsp_23_3_ex1_elex</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <context-param>
+  	<param-name>con_name</param-name>
+  	<param-value>con_name은 홍길동 입니다.</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>con_id</param-name>
+  	<param-value>con_id는 abcde 입니다.</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>con_pw</param-name>
+  	<param-value>con_pw는 12345 입니다.</param-value>
+  </context-param>
+  
+</web-app>
+```
+
+
+
+![image-20200604085510865](images/image-20200604085510865.png)
+
+pageScope 와 requestScope 는 페이지와 요청 범위 내에서 유효한 객체이기 때문에, objel.jsp 파일에서 objelOk.jsp 파일로 넘어갈 경우 값이 없음을 확인할 수 있다. 
+
+
+
+
+
+# 24강. JSTL (JSP standard Tag Library)
+
+- HTML 태그와 같이 사용되어 전체적인 코드의 가독성이 떨어지는 JSP의 단점을 보완하고자 만들어진 태그 라이브러리. 
+
+- JSTL의 경우 Tomcat 컨테이너에 포함되어있지 않으므로, 별도의 설치를 하고 사용한다. 
+
+- JSTL 설치 
+
+  http://jakarta.apache.org 접속 후 아래 순서에 따라 다운로드
+
+![image-20200604090315317](images/image-20200604090315317.png)
+
+![image-20200604090359283](images/image-20200604090359283.png)
+
+라이브러리 파일 다운로드 이후, 압축을 해제하고 `jar` 파일들을 Tomcat 의 lib 디렉터리 하단으로 복사한다. 
+
+
+
+### JSTL 라이브러리
+
+- JSTL 에서는 다섯 가지의 라이브러리를 제공한다. 
+
+  <img src="images/image-20200604090513629.png" alt="image-20200604090513629" style="zoom:67%;" />
+
+  그 중 가장 기본적인 라이브러리인 Core 라이브러리를 살펴본다. 
+
+
+
+#### Core
+
+- Core 라이브러리는 기본적인 라이브러리로 출력, 제어문, 반복문 같은 기능이 포함되어있다. 
+
+<img src="images/image-20200604090600971.png" alt="image-20200604090600971" style="zoom:67%;" />
+
+<img src="images/image-20200604090615703.png" alt="image-20200604090615703" style="zoom:67%;" />
+
+<img src="images/image-20200604090715437.png" alt="image-20200604090715437" style="zoom:67%;" />
+
+<img src="images/image-20200604090737289.png" alt="image-20200604090737289" style="zoom:67%;" />
+
+
+
+예시) 
 
 ```jsp
 	<c:set var="varName" value="varValue" />
@@ -1397,8 +1618,1223 @@ public class MemberDAO {
 
 
 
-# 25강 
+# 25강. FrontController 패턴과 Command 패턴
+
+### 25.1 url-pattern
+
+- 디렉터리 패턴 
+
+  디렉터리 형태로 서버의 해당 컴포넌트를 찾아서 실행하는 구조 
+
+  <img src="images/image-20200604091412919.png" alt="image-20200604091412919" style="zoom: 50%;" />
+
+- 확장자 패턴 
+
+  확장자 형태로 서버의 해당 컴포넌트를 찾아서 실행하는 구조 
+
+  <img src="images/image-20200604091446367.png" alt="image-20200604091446367" style="zoom:50%;" />
+
+  
+
+### 25.2 FrontController 패턴 
+
+- 클라이언트의 다양한 요청을 한곳으로 집중시켜, 개발 및 유지보수에 효율성을 극대화. 
+
+  <img src="images/image-20200604091544917.png" alt="image-20200604091544917" style="zoom:50%;" />
 
 
 
-![image-20200603171059579](images/image-20200603171059579.png)
+예시) 
+
+`frontControllerEx.jsp`
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<a href="insert.do">insert</a>
+	<hr />
+	<a href="http://localhost:7979<%=request.getContextPath()%>/update.do">update</a>
+	<hr />
+	<a href="http://localhost:7979/jsp_25_2_ex1_frontex/select.do">select</a>
+	<hr />
+	<a href="<%=request.getContextPath()%>/delete.do">delete</a>
+
+</body>
+</html>
+```
+
+`FrontCon.java`
+
+```java
+package com.javalec.ex;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("*.do")
+public class FrontCon extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+    public FrontCon() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		System.out.println("doGet");
+		actionDo(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		System.out.println("doPost");
+		actionDo(request, response);
+	}
+	
+	private void actionDo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		System.out.println("actionDo");
+		
+		String uri = request.getRequestURI();
+		System.out.println("uri : " + uri);
+		String conPath = request.getContextPath();
+		System.out.println("conPath : " + conPath);
+		String command = uri.substring(conPath.length());
+		System.out.println("command : " + command);
+
+		if(command.equals("/insert.do")){
+			System.out.println("insert");
+			System.out.println("----------------");
+		}else if(command.equals("/update.do")){
+			System.out.println("update");
+			System.out.println("----------------");
+		}else if(command.equals("/select.do")){
+			System.out.println("select");
+			System.out.println("----------------");
+		}else if(command.equals("/delete.do")){
+			System.out.println("delete");
+			System.out.println("----------------");
+		}
+	}
+}
+```
+
+
+
+![image-20200604092418097](images/image-20200604092418097.png)
+
+
+
+### 25.3 Command 패턴
+
+- 클라이언트로부터 받은 요청들에 대해서, 서블릿이 작업을 직접 처리하지 않고 해당 클래스가 처리하도록 한다. 
+
+<img src="images/image-20200604091633267.png" alt="image-20200604091633267" style="zoom:50%;" />
+
+
+
+
+
+# 26강. 포워딩(Forwarding)
+
+- 서블릿 또는 JSP에서 요청을 받은 후 다른 컴포넌트로 요청을 위임할 수 있다. 
+
+
+
+### 26.1 RequestDispatcher 클래스 
+
+- 요청 받은 요청 객체(request)를 위임하는 컴포넌트에 동일하게 전달 
+
+<img src="images/image-20200604093140962.png" alt="image-20200604093140962" style="zoom:67%;" />
+
+
+
+예시) 
+
+```java
+// RequestObj.java
+package com.javalec.ex;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/RequestObj")
+public class RequestObj extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    public RequestObj() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		System.out.println("doGet");
+		actionDo(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		System.out.println("doPost");
+		actionDo(request, response);
+	}
+	
+	private void actionDo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		System.out.println("actionDo");
+		
+		request.setAttribute("id", "abcde");
+		request.setAttribute("pw", "12345");
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/dispacherJsp.jsp");
+		dispatcher.forward(request, response);
+	}
+}
+```
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+
+		dispacherJsp.jsp
+		<hr />
+		
+		id : <%= request.getAttribute("id") %> <br />
+		pw : <%= request.getAttribute("pw") %>
+
+</body>
+</html>
+```
+
+![image-20200604093517982](images/image-20200604093517982.png)
+
+요청 객체가 그대로 전달되기 때문에, servlet 에서 설정한 객체의 값이 JSP 에서 그대로 유지됨을 확인할 수 있다. 
+
+
+
+
+
+### 26.2 HttpServletResponse 클래스 
+
+- 요청 받은 요청 객체를 위임 받은 컴포넌트에 전달하는 것이 아닌, 새로운 요청 객체를 생성한다. 
+
+<img src="images/image-20200604093225008.png" alt="image-20200604093225008" style="zoom:67%;" />
+
+
+
+예시 ) 
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+		<%
+			request.setAttribute("id", "abcde");
+			request.setAttribute("pw", "12345");
+			
+			response.sendRedirect("RequestObj");
+		%>
+</body>
+</html>
+```
+
+```java
+// RequestObj.java
+package com.javalec.ex;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/RequestObj")
+public class RequestObj extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    public RequestObj() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		System.out.println("doGet");
+		actionDo(request, response);
+	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		System.out.println("doPost");
+		actionDo(request, response);
+	}
+	
+	private void actionDo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		System.out.println("actionDo");
+		
+		String id = (String)request.getAttribute("id");
+		String pw = (String)request.getAttribute("pw");
+		
+		response.setContentType("text/jhtml; charset=EUC-KR");
+		PrintWriter writer = response.getWriter();
+		writer.print("<html><head></head><body>");
+		writer.print("RequestObj" + "<hr />");
+		writer.print("id : " + id + "<br />");
+		writer.print("pw : " + pw);
+		writer.print("</body></html>");
+		
+	}
+}
+```
+
+![image-20200604093731778](images/image-20200604093731778.png)
+
+새로운 요청 객체를 생성하여 전달되기 때문에, JSP 에서 요청 객체에 설정한 값은 servlet 에서는 사라지고 null 값이 되는것을 확인할 수 있다. 
+
+
+
+
+
+
+
+
+
+#   27-30강. MVC 패턴을 이용한 게시판 만들기 
+
+
+
+### DB 생성 
+
+```mssql
+create table mvc_board(
+	bId INT PRIMARY KEY, 
+	bName VARCHAR(20), 
+	bTitle VARCHAR(100), 
+	bContent VARCHAR(300), 
+	bDate DATE default sysdatetime(), 
+	bHit INT DEFAULT 0, 
+	bGroup INT, 
+	bStep INT, 
+	bIndent INT
+); 
+```
+
+### Sequence 생성
+
+<img src="images/image-20200605083031531.png" alt="image-20200605083031531" style="zoom:67%;" />
+
+
+
+### FrontController 만들기 
+
+```java
+package com.javalec.ex.frontcontroller;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.javalec.ex.command.BCommand;
+import com.javalec.ex.command.BContentCommand;
+import com.javalec.ex.command.BDeleteCommand;
+import com.javalec.ex.command.BListCommand;
+import com.javalec.ex.command.BModifyCommand;
+import com.javalec.ex.command.BReplyCommand;
+import com.javalec.ex.command.BReplyViewCommand;
+import com.javalec.ex.command.BWriteCommand;
+
+@WebServlet("*.do")
+public class BFrontController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    public BFrontController() {
+        super();
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("doGet");
+		actionDo(request, response); 
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("doPost");
+		actionDo(request, response); 
+	}
+	
+	private void actionDo(HttpServletRequest req , HttpServletResponse res) throws ServletException, IOException{
+		System.out.println("action DO");
+		
+		req.setCharacterEncoding("EUC-KR");
+		
+		String viewPage = null;  // 어떤 화면을 보여줄 지 .
+		BCommand command = null; // 어떤 로직을 수행할지 결정하는 command 객체 
+		
+		String uri = req.getRequestURI(); 
+		String conPath = req.getContextPath(); 
+		String com = uri.substring(conPath.length()); 
+		
+		if(com.equals("/write_view.do")){
+			viewPage = "write_view.jsp"; 
+		}else if(com.equals("/write.do")){
+			command = new BWriteCommand(); 
+			command.execute(req, res); 
+			viewPage = "list.do"; 
+		}else if(com.equals("/list.do")){
+			command = new BListCommand(); 
+			command.execute(req,res); 
+			viewPage = "list.jsp";
+		}else if(com.equals("/content_view.do")){
+			command = new BContentCommand(); 
+			command.execute(req, res); 
+			viewPage = "content_view.jsp"; 
+		}else if(com.equals("/modify.do")){
+			command = new BModifyCommand(); 
+			command.execute(req, res); 
+			viewPage = "list.do"; 
+		}else if(com.equals("/delete.do")){
+			command = new BDeleteCommand(); 
+			command.execute(req,res); 
+			viewPage = "list.do"; 
+		}else if(com.equals("/reply_view.do")){
+			command = new BReplyViewCommand(); 
+			command.execute(req, res); 
+			viewPage = "list.do"; 
+		}else if(com.equals("/reply.do")){
+			command = new BReplyCommand(); 
+			command.execute(req, res); 
+			viewPage = "list.do"; 
+		}
+		
+		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage); 
+		dispatcher.forward(req,res); 
+	}
+}
+```
+
+
+
+### Command 만들기 
+
+#### BCommand.java
+
+```java
+package com.javalec.ex.command;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public interface BCommand {
+	void execute(HttpServletRequest req, HttpServletResponse res);
+}
+```
+
+#### BContentCommand.java
+
+```java
+package com.javalec.ex.command;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.javalec.ex.dao.BDao;
+import com.javalec.ex.dto.BDto;
+
+public class BContentCommand implements BCommand{
+
+	@Override
+	public void execute(HttpServletRequest req, HttpServletResponse res) {
+		// TODO Auto-generated method stub
+		
+		String bId = req.getParameter("bId");
+		BDao dao = new BDao() ; 
+		BDto dto = dao.contentView(bId);
+		
+		req.setAttribute("content_view",dto);
+	}
+}
+
+```
+
+#### BDeleteCommand.java
+
+```java
+package com.javalec.ex.command;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.javalec.ex.dao.BDao;
+
+
+public class BDeleteCommand implements BCommand{
+	@Override
+	public void execute(HttpServletRequest req, HttpServletResponse res) {
+		// TODO Auto-generated method stub
+		String bId = req.getParameter("bId");
+		BDao dao = new BDao();
+		dao.delete(bId);
+	}
+}
+```
+
+#### BListCommand.java
+
+```java
+package com.javalec.ex.command;
+
+import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.javalec.ex.dao.BDao;
+import com.javalec.ex.dto.BDto;
+
+public class BListCommand implements BCommand{
+	@Override
+	public void execute(HttpServletRequest req, HttpServletResponse res) {
+		
+		BDao dao = new BDao();
+		ArrayList<BDto> dtos = dao.list();
+		req.setAttribute("list", dtos);
+	}
+}
+```
+
+#### BModifyCommand.java
+
+```java
+package com.javalec.ex.command;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.javalec.ex.dao.BDao;
+
+
+public class BModifyCommand implements BCommand{
+	@Override
+	public void execute(HttpServletRequest req, HttpServletResponse res) {
+		// TODO Auto-generated method stub
+		String bId = req.getParameter("bId");
+		String bName = req.getParameter("bName");
+		String bTitle = req.getParameter("bTitle");
+		String bContent = req.getParameter("bContent");
+		
+		BDao  dao = new BDao();
+		dao.modify(bId, bName, bTitle, bContent);
+	}
+}
+```
+
+#### BReplyCommand.java
+
+```java
+package com.javalec.ex.command;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.javalec.ex.dao.BDao;
+
+public class BReplyCommand implements BCommand{
+	@Override
+	public void execute(HttpServletRequest req, HttpServletResponse res) {
+		// TODO Auto-generated method stub
+		String bId = req.getParameter("bId");
+		String bName = req.getParameter("bName");
+		String bTitle = req.getParameter("bTitle");
+		String bContent = req.getParameter("bContent");
+		String bGroup = req.getParameter("bGroup");
+		String bStep = req.getParameter("bStep");
+		String bIndent = req.getParameter("bIndent");
+		
+		BDao dao = new BDao();
+		dao.reply(bId, bName, bTitle, bContent, bGroup, bStep, bIndent);
+	}
+}
+```
+
+#### BReplyViewCommand.java
+
+```java
+package com.javalec.ex.command;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.javalec.ex.dao.BDao;
+import com.javalec.ex.dto.BDto;
+
+public class BReplyViewCommand implements BCommand{
+	@Override
+	public void execute(HttpServletRequest req, HttpServletResponse res) {
+		// TODO Auto-generated method stub
+		String bId = req.getParameter("bId");
+		BDao dao = new BDao();
+		BDto dto = dao.reply_view(bId);
+		
+		req.setAttribute("reply_view", dto);
+	}
+}
+```
+
+#### BWriteCommand.java
+
+```java
+package com.javalec.ex.command;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.javalec.ex.dao.BDao;
+
+public class BWriteCommand implements BCommand{
+	@Override
+	public void execute(HttpServletRequest req, HttpServletResponse res) {
+		// TODO Auto-generated method stub
+		String bName = req.getParameter("bName");
+		String bTitle = req.getParameter("bTitle");
+		String bContent = req.getParameter("bContent");
+		
+		BDao dao = new BDao();
+		dao.write(bName, bTitle, bContent);
+	}
+}
+```
+
+
+
+
+
+### DTO 만들기
+
+```java
+package com.javalec.ex.dto;
+
+import java.sql.Timestamp;
+
+public class BDto {
+
+	int bId;
+	String bName;
+	String bTitle;
+	String bContent;
+	Timestamp bDate;
+	int bHit;
+	int bGroup;
+	int bStep;
+	int bIndent;
+	
+	public BDto() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public BDto(int bId, String bName, String bTitle, String bContent, Timestamp bDate, int bHit, int bGroup, int bStep, int bIndent) {
+		// TODO Auto-generated constructor stub
+		this.bId = bId;
+		this.bName = bName;
+		this.bTitle = bTitle;
+		this.bContent = bContent;
+		this.bDate = bDate;
+		this.bHit = bHit;
+		this.bGroup = bGroup;
+		this.bStep = bStep;
+		this.bIndent = bIndent;
+	}
+
+	// getter, setter 생략 
+}
+
+```
+
+
+
+### DAO 만들기  
+
+#### BDao() 
+
+```java
+public BDao() {
+    // TODO Auto-generated constructor stub
+
+    try {
+        Context context = new InitialContext();
+        dataSource = (DataSource) context.lookup("java:comp/env/jdbc/Oracle11g");
+    } catch (Exception e) {
+        // TODO: handle exception
+        e.printStackTrace();
+    }
+}
+```
+
+#### write 함수 
+
+```java
+public void write(String bName, String bTitle, String bContent){
+		Connection conn = null;
+		PreparedStatement prstmt = null; 
+		
+		try{
+			conn = dataSource.getConnection(); 
+			String query = "insert into mvc_board(bId, bName, bTitle, bContent, bHit, bGroup, bStep, bIndent) values (next value for mvc_board_seq, ?,?,?,0,(select isnull(MAX(bId),0) from mvc_board)+1,0,0)"; 
+			prstmt = conn.prepareStatement(query); 
+			prstmt.setString(1, bName);
+			prstmt.setString(2, bTitle);
+			prstmt.setString(3, bContent);
+			int rn = prstmt.executeUpdate();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			try {
+				if(prstmt != null) prstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+	}
+```
+
+
+
+#### list 함수 
+
+```java
+public ArrayList<BDto> list() {
+    ArrayList<BDto> dtos = new ArrayList<BDto>();
+    Connection connection = null;
+    PreparedStatement preparedStatement = null;
+    ResultSet resultSet = null;
+
+    try {
+        connection = dataSource.getConnection();
+
+        String query = "select bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent from mvc_board order by bGroup desc, bStep asc";
+        preparedStatement = connection.prepareStatement(query);
+        resultSet = preparedStatement.executeQuery();
+
+        while (resultSet.next()) {
+            int bId = resultSet.getInt("bId");
+            String bName = resultSet.getString("bName");
+            String bTitle = resultSet.getString("bTitle");
+            String bContent = resultSet.getString("bContent");
+            Timestamp bDate = resultSet.getTimestamp("bDate");
+            int bHit = resultSet.getInt("bHit");
+            int bGroup = resultSet.getInt("bGroup");
+            int bStep = resultSet.getInt("bStep");
+            int bIndent = resultSet.getInt("bIndent");
+
+            BDto dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent);
+            dtos.add(dto);
+        }
+
+    } catch (Exception e) {
+        // TODO: handle exception
+        e.printStackTrace();
+    } finally {
+        try {
+            if(resultSet != null) resultSet.close();
+            if(preparedStatement != null) preparedStatement.close();
+            if(connection != null) connection.close();
+        } catch (Exception e2) {
+            // TODO: handle exception
+            e2.printStackTrace();
+        }
+    }
+    return dtos;
+}
+```
+
+#### contentView 함수 
+
+```java
+public BDto contentView(String strID) {
+    upHit(strID);
+
+    BDto dto = null;
+    Connection connection = null;
+    PreparedStatement preparedStatement = null;
+    ResultSet resultSet = null;
+
+    try {
+
+        connection = dataSource.getConnection();
+
+        String query = "select * from mvc_board where bId = ?";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1, Integer.parseInt(strID));
+        resultSet = preparedStatement.executeQuery();
+
+        if(resultSet.next()) {
+            int bId = resultSet.getInt("bId");
+            String bName = resultSet.getString("bName");
+            String bTitle = resultSet.getString("bTitle");
+            String bContent = resultSet.getString("bContent");
+            Timestamp bDate = resultSet.getTimestamp("bDate");
+            int bHit = resultSet.getInt("bHit");
+            int bGroup = resultSet.getInt("bGroup");
+            int bStep = resultSet.getInt("bStep");
+            int bIndent = resultSet.getInt("bIndent");
+
+            dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent);
+        }
+
+    } catch (Exception e) {
+        // TODO: handle exception
+        e.printStackTrace();
+    } finally {
+        try {
+            if(resultSet != null) resultSet.close();
+            if(preparedStatement != null) preparedStatement.close();
+            if(connection != null) connection.close();
+        } catch (Exception e2) {
+            // TODO: handle exception
+            e2.printStackTrace();
+        }
+    }
+    return dto;
+}
+```
+
+#### upHit 함수 
+
+```java
+private void upHit( String bId) {
+    // TODO Auto-generated method stub
+    Connection connection = null;
+    PreparedStatement preparedStatement = null;
+
+    try {
+        connection = dataSource.getConnection();
+        String query = "update mvc_board set bHit = bHit + 1 where bId = ?";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, bId);
+
+        int rn = preparedStatement.executeUpdate();
+
+    } catch (Exception e) {
+        // TODO: handle exception
+        e.printStackTrace();
+    } finally {
+        try {
+            if(preparedStatement != null) preparedStatement.close();
+            if(connection != null) connection.close();
+        } catch (Exception e2) {
+            // TODO: handle exception
+            e2.printStackTrace();
+        }
+    }
+}
+```
+
+#### modify 함수 
+
+```java
+public void modify(String bId, String bName, String bTitle, String bContent) {
+    // TODO Auto-generated method stub
+
+    Connection connection = null;
+    PreparedStatement preparedStatement = null;
+
+    try {
+        connection = dataSource.getConnection();
+
+        String query = "update mvc_board set bName = ?, bTitle = ?, bContent = ? where bId = ?";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, bName);
+        preparedStatement.setString(2, bTitle);
+        preparedStatement.setString(3, bContent);
+        preparedStatement.setInt(4, Integer.parseInt(bId));
+        int rn = preparedStatement.executeUpdate();
+
+    } catch (Exception e) {
+        // TODO: handle exception
+        e.printStackTrace();
+    } finally {
+        try {
+            if(preparedStatement != null) preparedStatement.close();
+            if(connection != null) connection.close();
+        } catch (Exception e2) {
+            // TODO: handle exception
+            e2.printStackTrace();
+        }
+    }
+}
+```
+
+#### delete 함수
+
+```java
+public void delete(String bId) {
+    // TODO Auto-generated method stub
+    Connection connection = null;
+    PreparedStatement preparedStatement = null;
+    try {
+
+        connection = dataSource.getConnection();
+        String query = "delete from mvc_board where bId = ?";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1, Integer.parseInt(bId));
+        int rn = preparedStatement.executeUpdate();
+
+    } catch (Exception e) {
+        // TODO: handle exception
+        e.printStackTrace();
+    } finally {
+        try {
+            if(preparedStatement != null) preparedStatement.close();
+            if(connection != null) connection.close();
+        } catch (Exception e2) {
+            // TODO: handle exception
+            e2.printStackTrace();
+        }
+    }
+}
+```
+
+#### reply_view 함수 
+
+```java
+public BDto reply_view(String str) {
+    // TODO Auto-generated method stub
+    BDto dto = null;
+
+    Connection connection = null;
+    PreparedStatement preparedStatement = null;
+    ResultSet resultSet = null;
+    try {
+
+        connection = dataSource.getConnection();
+        String query = "select * from mvc_board where bId = ?";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1, Integer.parseInt(str));
+        resultSet = preparedStatement.executeQuery();
+
+        if(resultSet.next()) {
+            int bId = resultSet.getInt("bId");
+            String bName = resultSet.getString("bName");
+            String bTitle = resultSet.getString("bTitle");
+            String bContent = resultSet.getString("bContent");
+            Timestamp bDate = resultSet.getTimestamp("bDate");
+            int bHit = resultSet.getInt("bHit");
+            int bGroup = resultSet.getInt("bGroup");
+            int bStep = resultSet.getInt("bStep");
+            int bIndent = resultSet.getInt("bIndent");
+
+            dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent);
+        }
+
+    } catch (Exception e) {
+        // TODO: handle exception
+        e.printStackTrace();
+    } finally {
+        try {
+            if(preparedStatement != null) preparedStatement.close();
+            if(connection != null) connection.close();
+        } catch (Exception e2) {
+            // TODO: handle exception
+            e2.printStackTrace();
+        }
+    }
+
+    return dto;
+}
+```
+
+#### reply 함수
+
+```java
+public void reply(String bId, String bName, String bTitle, String bContent, String bGroup, String bStep, String bIndent) {
+    // TODO Auto-generated method stub
+
+    replyShape(bGroup, bStep);
+
+    Connection connection = null;
+    PreparedStatement preparedStatement = null;
+
+    try {
+        connection = dataSource.getConnection();
+        String query = "insert into mvc_board (bId, bName, bTitle, bContent, bGroup, bStep, bIndent) values (mvc_board_seq.nextval, ?, ?, ?, ?, ?, ?)";
+        preparedStatement = connection.prepareStatement(query);
+
+        preparedStatement.setString(1, bName);
+        preparedStatement.setString(2, bTitle);
+        preparedStatement.setString(3, bContent);
+        preparedStatement.setInt(4, Integer.parseInt(bGroup));
+        preparedStatement.setInt(5, Integer.parseInt(bStep) + 1);
+        preparedStatement.setInt(6, Integer.parseInt(bIndent) + 1);
+
+        int rn = preparedStatement.executeUpdate();
+    } catch (Exception e) {
+        // TODO: handle exception
+        e.printStackTrace();
+    } finally {
+        try {
+            if(preparedStatement != null) preparedStatement.close();
+            if(connection != null) connection.close();
+        } catch (Exception e2) {
+            // TODO: handle exception
+            e2.printStackTrace();
+        }
+    }
+
+}
+```
+
+#### replyShape 함수 
+
+```java
+private void replyShape( String strGroup, String strStep) {
+    // TODO Auto-generated method stub
+    Connection connection = null;
+    PreparedStatement preparedStatement = null;
+
+    try {
+        connection = dataSource.getConnection();
+        String query = "update mvc_board set bStep = bStep + 1 where bGroup = ? and bStep > ?";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1, Integer.parseInt(strGroup));
+        preparedStatement.setInt(2, Integer.parseInt(strStep));
+
+        int rn = preparedStatement.executeUpdate();
+    } catch (Exception e) {
+        // TODO: handle exception
+        e.printStackTrace();
+    } finally {
+        try {
+            if(preparedStatement != null) preparedStatement.close();
+            if(connection != null) connection.close();
+        } catch (Exception e2) {
+            // TODO: handle exception
+            e2.printStackTrace();
+        }
+    }
+}
+```
+
+
+
+### 화면 만들기 (JSP)
+
+#### write_view.jsp
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+		<table width="500" cellpadding="0" cellspacing="0" border="1">
+			<form action="write.do" method="post">
+				<tr>
+					<td> 이름 </td>
+					<td> <input type="text" name="bName" size = "50"> </td>
+				</tr>
+				<tr>
+					<td> 제목 </td>
+					<td> <input type="text" name="bTitle" size = "50"> </td>
+				</tr>
+				<tr>
+					<td> 내용 </td>
+					<td> <textarea name="bContent" rows="10" ></textarea> </td>
+				</tr>
+				<tr >
+					<td colspan="2"> <input type="submit" value="입력"> &nbsp;&nbsp; <a href="list.do">목록보기</a></td>
+				</tr>
+			</form>
+		</table>
+</body>
+</html>
+```
+
+#### list.jsp
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+	
+	<table width="500" cellpadding="0" cellspacing="0" border="1">
+		<tr>
+			<td>번호</td>
+			<td>이름</td>
+			<td>제목</td>
+			<td>날짜</td>
+			<td>히트</td>
+		</tr>
+		<c:forEach items="${list}" var="dto">
+		<tr>
+			<td>${dto.bId}</td>
+			<td>${dto.bName}</td>
+			<td>
+				<c:forEach begin="1" end="${dto.bIndent}">-</c:forEach>
+				<a href="content_view.do?bId=${dto.bId}">${dto.bTitle}</a></td>
+			<td>${dto.bDate}</td>
+			<td>${dto.bHit}</td>
+		</tr>
+		</c:forEach>
+		<tr>
+			<td colspan="5"> <a href="write_view.do">글작성</a> </td>
+		</tr>
+	</table>
+	
+</body>
+</html>
+```
+
+#### reply_view.jsp
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<table width="500" cellpadding="0" cellspacing="0" border="1">
+		<form action="reply.do" method="post">
+			<input type="hidden" name="bId" value="${reply_view.bId}">
+			<input type="hidden" name="bGroup" value="${reply_view.bGroup}">
+			<input type="hidden" name="bStep" value="${reply_view.bStep}">
+			<input type="hidden" name="bIndent" value="${reply_view.bIndent}">
+			<tr>
+				<td> 번호 </td>
+				<td> ${reply_view.bId} </td>
+			</tr>
+			<tr>
+				<td> 히트 </td>
+				<td> ${reply_view.bHit} </td>
+			</tr>
+			<tr>
+				<td> 이름 </td>
+				<td> <input type="text" name="bName" value="${reply_view.bName}"></td>
+			</tr>
+			<tr>
+				<td> 제목 </td>
+				<td> <input type="text" name="bTitle" value="${reply_view.bTitle}"></td>
+			</tr>
+			<tr>
+				<td> 내용 </td>
+				<td> <textarea rows="10"  name="bContent">${reply_view.bContent}</textarea></td>
+			</tr>
+			<tr >
+				<td colspan="2"><input type="submit" value="답변"> <a href="list.do" >목록</a></td>
+			</tr>
+		</form>
+	</table>
+	
+</body>
+</html>
+```
+
+#### content_view.jsp
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<table width="500" cellpadding="0" cellspacing="0" border="1">
+		<form action="modify.do" method="post">
+			<input type="hidden" name="bId" value="${content_view.bId}">
+			<tr>
+				<td> 번호 </td>
+				<td> ${content_view.bId} </td>
+			</tr>
+			<tr>
+				<td> 히트 </td>
+				<td> ${content_view.bHit} </td>
+			</tr>
+			<tr>
+				<td> 이름 </td>
+				<td> <input type="text" name="bName" value="${content_view.bName}"></td>
+			</tr>
+			<tr>
+				<td> 제목 </td>
+				<td> <input type="text" name="bTitle" value="${content_view.bTitle}"></td>
+			</tr>
+			<tr>
+				<td> 내용 </td>
+				<td> <textarea rows="10" name="bContent" >${content_view.bContent}</textarea></td>
+			</tr>
+			<tr >
+				<td colspan="2"> <input type="submit" value="수정"> &nbsp;&nbsp; <a href="list.do">목록보기</a> &nbsp;&nbsp; <a href="delete.do?bId=${content_view.bId}">삭제</a> &nbsp;&nbsp; <a href="reply_view.do?bId=${content_view.bId}">답변</a></td>
+			</tr>
+		</form>
+	</table>
+	
+</body>
+</html>
+```
+
+
+
+### 최종 완성 화면 
+
+
+
+​	![image-20200605134905885](images/image-20200605134905885.png)
